@@ -1,0 +1,122 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\connectbuyselltoday\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A6BB26A4-2E02-4244-84F4-6DF8016648FC}|Domain\\connectbuyselltoday.Domain\\connectbuyselltoday.Domain.csproj|c:\\connectbuyselltoday\\domain\\connectbuyselltoday.domain\\entities\\productad.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A6BB26A4-2E02-4244-84F4-6DF8016648FC}|Domain\\connectbuyselltoday.Domain\\connectbuyselltoday.Domain.csproj|solutionrelative:domain\\connectbuyselltoday.domain\\entities\\productad.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A6BB26A4-2E02-4244-84F4-6DF8016648FC}|Domain\\connectbuyselltoday.Domain\\connectbuyselltoday.Domain.csproj|c:\\connectbuyselltoday\\domain\\connectbuyselltoday.domain\\entities\\category.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A6BB26A4-2E02-4244-84F4-6DF8016648FC}|Domain\\connectbuyselltoday.Domain\\connectbuyselltoday.Domain.csproj|solutionrelative:domain\\connectbuyselltoday.domain\\entities\\category.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A6BB26A4-2E02-4244-84F4-6DF8016648FC}|Domain\\connectbuyselltoday.Domain\\connectbuyselltoday.Domain.csproj|c:\\connectbuyselltoday\\domain\\connectbuyselltoday.domain\\common\\adimage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A6BB26A4-2E02-4244-84F4-6DF8016648FC}|Domain\\connectbuyselltoday.Domain\\connectbuyselltoday.Domain.csproj|solutionrelative:domain\\connectbuyselltoday.domain\\common\\adimage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A6BB26A4-2E02-4244-84F4-6DF8016648FC}|Domain\\connectbuyselltoday.Domain\\connectbuyselltoday.Domain.csproj|c:\\connectbuyselltoday\\domain\\connectbuyselltoday.domain\\entities\\message.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A6BB26A4-2E02-4244-84F4-6DF8016648FC}|Domain\\connectbuyselltoday.Domain\\connectbuyselltoday.Domain.csproj|solutionrelative:domain\\connectbuyselltoday.domain\\entities\\message.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A6BB26A4-2E02-4244-84F4-6DF8016648FC}|Domain\\connectbuyselltoday.Domain\\connectbuyselltoday.Domain.csproj|c:\\connectbuyselltoday\\domain\\connectbuyselltoday.domain\\enums\\adstatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A6BB26A4-2E02-4244-84F4-6DF8016648FC}|Domain\\connectbuyselltoday.Domain\\connectbuyselltoday.Domain.csproj|solutionrelative:domain\\connectbuyselltoday.domain\\enums\\adstatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A6BB26A4-2E02-4244-84F4-6DF8016648FC}|Domain\\connectbuyselltoday.Domain\\connectbuyselltoday.Domain.csproj|c:\\connectbuyselltoday\\domain\\connectbuyselltoday.domain\\common\\baseentity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A6BB26A4-2E02-4244-84F4-6DF8016648FC}|Domain\\connectbuyselltoday.Domain\\connectbuyselltoday.Domain.csproj|solutionrelative:domain\\connectbuyselltoday.domain\\common\\baseentity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 4,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Category.cs",
+              "DocumentMoniker": "C:\\connectbuyselltoday\\Domain\\connectbuyselltoday.Domain\\Entities\\Category.cs",
+              "RelativeDocumentMoniker": "Domain\\connectbuyselltoday.Domain\\Entities\\Category.cs",
+              "ToolTip": "C:\\connectbuyselltoday\\Domain\\connectbuyselltoday.Domain\\Entities\\Category.cs",
+              "RelativeToolTip": "Domain\\connectbuyselltoday.Domain\\Entities\\Category.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-24T12:06:38.861Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AdImage.cs",
+              "DocumentMoniker": "C:\\connectbuyselltoday\\Domain\\connectbuyselltoday.Domain\\Common\\AdImage.cs",
+              "RelativeDocumentMoniker": "Domain\\connectbuyselltoday.Domain\\Common\\AdImage.cs",
+              "ToolTip": "C:\\connectbuyselltoday\\Domain\\connectbuyselltoday.Domain\\Common\\AdImage.cs",
+              "RelativeToolTip": "Domain\\connectbuyselltoday.Domain\\Common\\AdImage.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-24T12:05:36.313Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Message.cs",
+              "DocumentMoniker": "C:\\connectbuyselltoday\\Domain\\connectbuyselltoday.Domain\\Entities\\Message.cs",
+              "RelativeDocumentMoniker": "Domain\\connectbuyselltoday.Domain\\Entities\\Message.cs",
+              "ToolTip": "C:\\connectbuyselltoday\\Domain\\connectbuyselltoday.Domain\\Entities\\Message.cs",
+              "RelativeToolTip": "Domain\\connectbuyselltoday.Domain\\Entities\\Message.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-24T12:04:41.057Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "AdStatus.cs",
+              "DocumentMoniker": "C:\\connectbuyselltoday\\Domain\\connectbuyselltoday.Domain\\Enums\\AdStatus.cs",
+              "RelativeDocumentMoniker": "Domain\\connectbuyselltoday.Domain\\Enums\\AdStatus.cs",
+              "ToolTip": "C:\\connectbuyselltoday\\Domain\\connectbuyselltoday.Domain\\Enums\\AdStatus.cs",
+              "RelativeToolTip": "Domain\\connectbuyselltoday.Domain\\Enums\\AdStatus.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-24T12:03:57.118Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ProductAd.cs",
+              "DocumentMoniker": "C:\\connectbuyselltoday\\Domain\\connectbuyselltoday.Domain\\Entities\\ProductAd.cs",
+              "RelativeDocumentMoniker": "Domain\\connectbuyselltoday.Domain\\Entities\\ProductAd.cs",
+              "ToolTip": "C:\\connectbuyselltoday\\Domain\\connectbuyselltoday.Domain\\Entities\\ProductAd.cs",
+              "RelativeToolTip": "Domain\\connectbuyselltoday.Domain\\Entities\\ProductAd.cs",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAAABMAAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-24T12:02:14.51Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "BaseEntity.cs",
+              "DocumentMoniker": "C:\\connectbuyselltoday\\Domain\\connectbuyselltoday.Domain\\Common\\BaseEntity.cs",
+              "RelativeDocumentMoniker": "Domain\\connectbuyselltoday.Domain\\Common\\BaseEntity.cs",
+              "ToolTip": "C:\\connectbuyselltoday\\Domain\\connectbuyselltoday.Domain\\Common\\BaseEntity.cs",
+              "RelativeToolTip": "Domain\\connectbuyselltoday.Domain\\Common\\BaseEntity.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-24T12:01:27.445Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
