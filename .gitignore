@@ -1,0 +1,140 @@
+# Visual Studio temporary files
+.vs/
+*.vsidx
+*.vspscc
+*.vssscc
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Obj]/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio user-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.rsuser
+
+# Visual Studio options
+.vs/
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebugPublic/
+[Rr]elease/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio 2015/2017 cache/options directory
+.vs/
+# Uncomment if you have tasks that create the following:
+#[TemporaryItems]
+
+# Files that might appear in the root of a solution
+*.sln
+*.slnx
+
+# Visual Studio cache options
+.vs/
+
+#NuGet
+*.nupkg
+*.snupkg
+#nupkg cache
+
+# The packages folder can be ignored because of PackageRestore
+##[Pp]ackages/*
+# except build/, which is used as an MSBuild target.
+!**/[Pp]ackages/build/
+# Uncomment if necessary; however, in general, .vscode should be checked in
+#.vscode/
+# NuGet Packages
+*.nupkg
+# The packages folder that shows up at the bottom of the Explorer
+[P-p]ackages/
+# but build/ and .gitignore is still needed
+!**/build/
+# Uncomment the line below if necessary
+#!**/[P-p]ackages/build/
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+# NUnit
+*.VisualState.xml
+TestResult.xml
+nunit-*.xml
+# Build Results of the ATL ActiveX C++ project
+[Da][Rr][Kk]*/
+# .NET
+*.pch
+*.idb
+*.ilk
+*.lib
+*.logs
+*.tlog
+*.lastcodeanalysissucceeded
+# Visual C++ cache files
+ipch/
+*.aps
+*.pch
+*.pdb
+*.ilk
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.vspscc
+*.vssscc
+.builds
+*.xsd
+# KDevelop 4
+*.kdev4
+# Qt Creator
+*.autosave
+# Monodevelop
+*.userprefs
+# Desktop Services
+.DS_Store
+# Visual Studio files
+*.[Pp]ublish.xml
+*.施IDC
+# Remote Desktop
+*.rdp
+# Visual Studio Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+# Local History for VS Code
+.history/
+# Built Visual Studio Code Extensions
+*.vsix

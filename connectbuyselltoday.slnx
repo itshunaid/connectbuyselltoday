@@ -1,8 +1,14 @@
 <Solution>
-  <Folder Name="/Application/" />
+  <Folder Name="/Application/">
+    <Project Path="Application/connectbuyselltoday.Application/connectbuyselltoday.Application.csproj" />
+  </Folder>
   <Folder Name="/Domain/">
     <Project Path="Domain/connectbuyselltoday.Domain/connectbuyselltoday.Domain.csproj" />
   </Folder>
-  <Folder Name="/Infrastructure/" />
-  <Folder Name="/Web/" />
+  <Folder Name="/Infrastructure/">
+    <Project Path="Infrastructure/connectbuyselltoday.Infrastructure/connectbuyselltoday.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Web/">
+    <Project Path="Web/connectbuyselltoday.Web/connectbuyselltoday.Web.csproj" />
+  </Folder>
 </Solution>
