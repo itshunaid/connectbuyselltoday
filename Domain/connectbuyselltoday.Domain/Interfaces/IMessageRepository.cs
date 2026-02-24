@@ -1,11 +1,11 @@
-﻿using connectbuyselltoday.Domain.Entities;
+﻿using ConnectBuySellToday.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace connectbuyselltoday.Domain.Interfaces
+namespace ConnectBuySellToday.Domain.Interfaces
 {
     public interface IMessageRepository : IGenericRepository<Message>
     {

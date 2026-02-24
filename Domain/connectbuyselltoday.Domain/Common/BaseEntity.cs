@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace connectbuyselltoday.Domain.Common
+namespace ConnectBuySellToday.Domain.Common
 {   
 
     public abstract class BaseEntity

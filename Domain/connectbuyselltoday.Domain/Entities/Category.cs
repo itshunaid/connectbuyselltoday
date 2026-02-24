@@ -1,6 +1,6 @@
-﻿using connectbuyselltoday.Domain.Common;
+﻿using ConnectBuySellToday.Domain.Common;
 
-namespace connectbuyselltoday.Domain.Entities
+namespace ConnectBuySellToday.Domain.Entities
 {
    
 

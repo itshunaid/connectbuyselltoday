@@ -1,6 +1,6 @@
-﻿using connectbuyselltoday.Domain.Entities;
+﻿using ConnectBuySellToday.Domain.Entities;
 
-namespace connectbuyselltoday.Domain.Common
+namespace ConnectBuySellToday.Domain.Common
 {
     public class AdImage : BaseEntity
     {

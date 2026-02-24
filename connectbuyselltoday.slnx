@@ -1,14 +1,14 @@
 <Solution>
   <Folder Name="/Application/">
-    <Project Path="Application/connectbuyselltoday.Application/connectbuyselltoday.Application.csproj" />
+    <Project Path="Application/ConnectBuySellToday.Application/ConnectBuySellToday.Application.csproj" />
   </Folder>
   <Folder Name="/Domain/">
-    <Project Path="Domain/connectbuyselltoday.Domain/connectbuyselltoday.Domain.csproj" />
+    <Project Path="Domain/ConnectBuySellToday.Domain/ConnectBuySellToday.Domain.csproj" />
   </Folder>
   <Folder Name="/Infrastructure/">
-    <Project Path="Infrastructure/connectbuyselltoday.Infrastructure/connectbuyselltoday.Infrastructure.csproj" />
+    <Project Path="Infrastructure/ConnectBuySellToday.Infrastructure/ConnectBuySellToday.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/Web/">
-    <Project Path="Web/connectbuyselltoday.Web/connectbuyselltoday.Web.csproj" />
+    <Project Path="Web/ConnectBuySellToday.Web/ConnectBuySellToday.Web.csproj" />
   </Folder>
 </Solution>

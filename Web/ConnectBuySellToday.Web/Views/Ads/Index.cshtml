@@ -1,0 +1,96 @@
+﻿@model IEnumerable<ConnectBuySellToday.Application.DTOs.AdDto>
+
+@{
+    ViewData["Title"] = "Fresh Recommendations";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">Fresh recommendations</h2>
+        <a asp-action="Create" class="btn btn-outline-primary btn-lg shadow-sm">
+            <i class="bi bi-plus-lg"></i> + SELL
+        </a>
+    </div>
+
+    <!-- Search and Filter Section -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <form asp-action="Index" method="get" class="row g-3">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" name="searchQuery" class="form-control" 
+                               placeholder="Search for items..." 
+                               value="@Context.Request.Query["searchQuery"]" />
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-search"></i> Search
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <select name="categoryId" class="form-select" 
+                            onchange="this.form.submit()">
+                        <option value="">All Categories</option>
+                        <option value="1">Electronics</option>
+                        <option value="2">Vehicles</option>
+                        <option value="3">Furniture</option>
+                        <option value="4">Clothing</option>
+                        <option value="5">Books</option>
+                        <option value="6">Sports</option>
+                        <option value="7">Other</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <a asp-action="Index" class="btn btn-outline-secondary w-100">Clear</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5">
+            <h4 class="text-muted">No items found</h4>
+            <p class="text-muted">Try adjusting your search or filters</p>
+            <a asp-action="Create" class="btn btn-primary">Post the first ad</a>
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
+            @foreach (var ad in Model)
+            {
+                <div class="col">
+                    <a asp-action="Details" asp-route-id="@ad.Id" class="text-decoration-none">
+                        <div class="card h-100 shadow-sm hover-shadow transition">
+                            <img src="@(ad.MainImageUrl ?? "/images/no-image.png")"
+                                 class="card-img-top" alt="@ad.Title"
+                                 style="height: 180px; object-fit: cover;">
+
+                            <div class="card-body">
+                                <h5 class="card-title text-success fw-bold">₹ @ad.Price.ToString("N0")</h5>
+                                <p class="card-text text-truncate mb-1 text-dark">@ad.Title</p>
+                                <p class="text-muted small">@ad.CategoryName</p>
+                            </div>
+
+                            <div class="card-footer bg-white border-top-0 d-flex justify-content-between">
+                                <small class="text-muted">Today</small>
+                                <i class="bi bi-heart"></i>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<style>
+    .hover-shadow:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 1rem 3rem rgba(0,0,0,.175) !important;
+        transition: all 0.3s ease;
+    }
+    .card {
+        color: inherit;
+    }
+</style>

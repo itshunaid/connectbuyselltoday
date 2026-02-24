@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace connectbuyselltoday.Domain.Interfaces
+namespace ConnectBuySellToday.Domain.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {

@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\connectbuyselltoday\\Domain\\connectbuyselltoday.Domain\\connectbuyselltoday.Domain.csproj",
-      "projectName": "connectbuyselltoday.Domain",
-      "projectPath": "C:\\connectbuyselltoday\\Domain\\connectbuyselltoday.Domain\\connectbuyselltoday.Domain.csproj",
+      "projectUniqueName": "C:\\ConnectBuySellToday\\Domain\\ConnectBuySellToday.Domain\\ConnectBuySellToday.Domain.csproj",
+      "projectName": "ConnectBuySellToday.Domain",
+      "projectPath": "C:\\ConnectBuySellToday\\Domain\\ConnectBuySellToday.Domain\\ConnectBuySellToday.Domain.csproj",
       "packagesPath": "C:\\Users\\SURFACE\\.nuget\\packages\\",
-      "outputPath": "C:\\connectbuyselltoday\\Domain\\connectbuyselltoday.Domain\\obj\\",
+      "outputPath": "C:\\ConnectBuySellToday\\Domain\\ConnectBuySellToday.Domain\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

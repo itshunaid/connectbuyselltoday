@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace connectbuyselltoday.Domain.Interfaces
+namespace ConnectBuySellToday.Domain.Interfaces
 {
     public interface ISpecification<T>
     {

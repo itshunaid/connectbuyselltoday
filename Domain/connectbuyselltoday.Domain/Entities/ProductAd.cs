@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using connectbuyselltoday.Domain.Common;
-using connectbuyselltoday.Domain.Enums;
+using ConnectBuySellToday.Domain.Common;
+using ConnectBuySellToday.Domain.Enums;
 using System.Net.NetworkInformation;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace connectbuyselltoday.Domain.Entities
+namespace ConnectBuySellToday.Domain.Entities
 {
     public class ProductAd : BaseEntity
     {

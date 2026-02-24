@@ -1,21 +1,25 @@
-using connectbuyselltoday.Web.Models;
+using ConnectBuySellToday.Application.Interfaces;
+using ConnectBuySellToday.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace connectbuyselltoday.Web.Controllers
+namespace ConnectBuySellToday.Web.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IAdService _adService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IAdService adService)
         {
             _logger = logger;
+            _adService = adService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var ads = await _adService.GetLatestAdsAsync();
+            return View(ads);
         }
 
         public IActionResult Privacy()

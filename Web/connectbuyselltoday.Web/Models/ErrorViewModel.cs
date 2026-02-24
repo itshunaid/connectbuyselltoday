@@ -1,4 +1,4 @@
-namespace connectbuyselltoday.Web.Models
+namespace ConnectBuySellToday.Web.Models
 {
     public class ErrorViewModel
     {

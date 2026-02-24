@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace connectbuyselltoday.Domain.Interfaces;
+namespace ConnectBuySellToday.Domain.Interfaces;
 
 public interface IGenericRepository<T> where T : class
 {
