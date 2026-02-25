@@ -26,5 +26,8 @@ public interface IAdRepository : IGenericRepository<ProductAd>
     Task<int> GetActiveAdsCountAsync();
     Task<int> GetPendingAdsCountAsync();
     Task<int> GetSoldAdsCountAsync();
+
+    // Favorite methods
+    Task<IEnumerable<ProductAd>> GetFavoriteAdsByUserIdAsync(string userId);
 }
 }

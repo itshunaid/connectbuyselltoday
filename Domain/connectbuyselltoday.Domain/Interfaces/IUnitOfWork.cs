@@ -9,6 +9,7 @@ public interface IUnitOfWork : IDisposable
     IAdImageRepository AdsImage { get; }
     IMessageRepository Messages { get; }
     IUserRepository Users { get; }
+    IFavoriteRepository Favorites { get; }
 
     Task<int> CompleteAsync();
 }

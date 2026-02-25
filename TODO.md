@@ -1,17 +1,19 @@
-# TODO - Admin Moderation & Performance Optimization
+# TODO - Favorite Feature Implementation
 
-## Task 1: Admin Moderation (Approve/Reject Ads)
-- [ ] 1.1 Update AdService.CreateAdAsync to set status to PendingReview
-- [ ] 1.2 Update AdRepository.GetRecentAdsAsync to filter by Active status only
-- [ ] 1.3 Verify AdRepository.GetFilteredAdsAsync also filters by Active status
+## Domain Layer
+- [x] Create Favorite entity in Domain/Entities/Favorite.cs
+- [x] Create IFavoriteRepository interface in Domain/Interfaces/IFavoriteRepository.cs
 
-## Task 2: Performance Optimization - Caching Categories
-- [ ] 2.1 Create ICategoryService interface
-- [ ] 2.2 Create CategoryService with IMemoryCache implementation
-- [ ] 2.3 Register CategoryService in Program.cs
-- [ ] 2.4 Update HomeController to include categories in ViewBag
-- [ ] 2.5 Update Layout to display categories navigation
+## Infrastructure Layer
+- [x] Update ApplicationDbContext.cs - add DbSet<Favorite> and configure relationships
+- [x] Update IAdRepository.cs - add GetFavoriteAdsByUserIdAsync method
+- [x] Implement GetFavoriteAdsByUserIdAsync in AdRepository.cs
+- [x] Create FavoriteRepository.cs in Infrastructure/Repositories/
+- [x] Update IUnitOfWork.cs - add Favorite repository property
+- [x] Update UnitOfWork.cs - implement Favorite repository
 
-## Implementation Notes:
-- Admin moderation flow: User creates ad → Status = PendingReview → Admin approves → Status = Active
-- Categories will be cached for 30 minutes to improve performance
+## Application Layer
+- [x] Create FavoriteService.cs with ToggleFavoriteAsync method
+
+## Database
+- [x] Create migration for Favorite entity

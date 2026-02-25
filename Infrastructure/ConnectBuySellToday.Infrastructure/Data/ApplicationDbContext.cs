@@ -13,6 +13,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Category> Categories => Set<Category>();
     public DbSet<AdImage> AdImages => Set<AdImage>();
     public DbSet<Message> Messages => Set<Message>();
+    public DbSet<Favorite> Favorites => Set<Favorite>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -28,6 +29,24 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .HasForeignKey(p => p.SellerId)
             .OnDelete(DeleteBehavior.SetNull)  // Set null instead of cascade when user is deleted
             .IsRequired(false);  // Mark as optional (nullable) to support SetNull
+
+        // Favorite entity configuration
+        modelBuilder.Entity<Favorite>()
+            .HasOne(f => f.User)
+            .WithMany(u => u.Favorites)
+            .HasForeignKey(f => f.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Favorite>()
+            .HasOne(f => f.ProductAd)
+            .WithMany(p => p.Favorites)
+            .HasForeignKey(f => f.ProductAdId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // Ensure unique constraint on UserId and ProductAdId combination
+        modelBuilder.Entity<Favorite>()
+            .HasIndex(f => new { f.UserId, f.ProductAdId })
+            .IsUnique();
 
         // Seed categories with predefined Guids to match the dropdown values
         modelBuilder.Entity<Category>().HasData(

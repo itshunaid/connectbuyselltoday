@@ -30,5 +30,6 @@ namespace ConnectBuySellToday.Domain.Entities
 
         public List<AdImage> Images { get; set; } = new();
         public List<Message> Messages { get; set; } = new();
+        public List<Favorite> Favorites { get; set; } = new();
     }
 }

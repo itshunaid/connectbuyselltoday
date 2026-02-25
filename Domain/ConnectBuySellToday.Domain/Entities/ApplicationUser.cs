@@ -10,4 +10,6 @@ public class ApplicationUser : IdentityUser
     public string? BanReason { get; set; }
     public DateTime? BanExpiresAt { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    public List<Favorite> Favorites { get; set; } = new();
 }

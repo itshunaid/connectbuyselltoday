@@ -132,4 +132,14 @@ public class AdRepository : GenericRepository<ProductAd>, IAdRepository
         return await _context.ProductAds
             .CountAsync(x => x.Status == Domain.Enums.AdStatus.Sold);
     }
+
+    public async Task<IEnumerable<ProductAd>> GetFavoriteAdsByUserIdAsync(string userId)
+    {
+        return await _context.ProductAds
+            .Where(x => x.Favorites.Any(f => f.UserId == userId))
+            .Include(x => x.Category)
+            .Include(x => x.Images)
+            .OrderByDescending(x => x.CreatedAt)
+            .ToListAsync();
+    }
 }
