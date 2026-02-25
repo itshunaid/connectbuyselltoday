@@ -1,0 +1,75 @@
+@model IEnumerable<ConnectBuySellToday.Application.DTOs.AdDto>
+
+@{
+    ViewData["Title"] = "Pending Ads";
+}
+
+<div class="container">
+    <h1>Pending Ads</h1>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">No pending ads to review.</div>
+    }
+
+    <div class="row">
+        @foreach (var ad in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    @if (!string.IsNullOrEmpty(ad.MainImageUrl))
+                    {
+                        <img src="@ad.MainImageUrl" class="card-img-top" alt="@ad.Title" style="height: 200px; object-fit: cover;">
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title">@ad.Title</h5>
+                        <p class="card-text">@ad.Description.Substring(0, Math.Min(100, ad.Description.Length))...</p>
+                        <p class="card-text"><strong>Price:</strong> $@ad.Price</p>
+                        <p class="card-text"><strong>Category:</strong> @ad.CategoryName</p>
+                        <p class="card-text"><small class="text-muted">Posted: @ad.CreatedAt.ToShortDateString()</small></p>
+                        
+                        <div class="btn-group" role="group">
+                            <a asp-action="ApproveAd" asp-route-id="@ad.Id" class="btn btn-success">Approve</a>
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal-@ad.Id">
+                                Reject
+                            </button>
+                        </div>
+
+                        <div class="modal fade" id="rejectModal-@ad.Id" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Reject Ad</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <form asp-action="RejectAd" method="post">
+                                        <div class="modal-body">
+                                            <input type="hidden" name="id" value="@ad.Id" />
+                                            <div class="mb-3">
+                                                <label class="form-label">Reason for rejection</label>
+                                                <textarea name="reason" class="form-control" required></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <button type="submit" class="btn btn-danger">Reject Ad</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

@@ -22,7 +22,11 @@ namespace ConnectBuySellToday.Domain.Entities
 
         // In Clean Architecture, we often store the Identity User ID as a string 
         // to keep the Domain layer decoupled from the Identity Framework.
-        public string SellerId { get; set; } = string.Empty;
+        // Made nullable to support SetNull delete behavior when a user is deleted
+        public string? SellerId { get; set; }
+        
+        // Navigation property for EF Core relationship
+        public ApplicationUser? Seller { get; set; }
 
         public List<AdImage> Images { get; set; } = new();
         public List<Message> Messages { get; set; } = new();

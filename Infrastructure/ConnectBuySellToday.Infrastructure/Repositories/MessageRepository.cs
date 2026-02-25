@@ -26,8 +26,19 @@ public class MessageRepository : GenericRepository<Message>, IMessageRepository
 
     public async Task<IEnumerable<Message>> GetUserInboxAsync(string userId)
     {
+        // Get all messages where user is either sender or receiver
         return await _context.Messages
-            .Where(x => x.ReceiverId == userId)
+            .Where(x => x.SenderId == userId || x.ReceiverId == userId)
+            .Include(x => x.ProductAd)
+            .OrderByDescending(x => x.CreatedAt)
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<Message>> GetUserConversationsAsync(string userId)
+    {
+        // Get all messages where user is either sender or receiver
+        return await _context.Messages
+            .Where(x => x.SenderId == userId || x.ReceiverId == userId)
             .Include(x => x.ProductAd)
             .OrderByDescending(x => x.CreatedAt)
             .ToListAsync();

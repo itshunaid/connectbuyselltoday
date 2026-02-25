@@ -1,0 +1,63 @@
+@model DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="container">
+    <h1>My Dashboard</h1>
+    
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5>My Ads</h5>
+                </div>
+                <div class="card-body">
+                    <p>You have @Model.MyAds.Count() active ads</p>
+                    <a asp-action="MyAds" class="btn btn-primary">View My Ads</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5>My Messages</h5>
+                </div>
+                <div class="card-body">
+                    <p>You have @Model.Conversations.Count() conversations</p>
+                    <a asp-action="MyChats" class="btn btn-success">View My Chats</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <h3>Recent Ads</h3>
+        @if (Model.MyAds.Any())
+        {
+            <div class="row">
+                @foreach (var ad in Model.MyAds.Take(6))
+                {
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            @if (!string.IsNullOrEmpty(ad.MainImageUrl))
+                            {
+                                <img src="@ad.MainImageUrl" class="card-img-top" alt="@ad.Title" style="height: 200px; object-fit: cover;">
+                            }
+                            <div class="card-body">
+                                <h5 class="card-title">@ad.Title</h5>
+                                <p class="card-text">$@ad.Price</p>
+                                <a asp-controller="Ads" asp-action="Details" asp-route-id="@ad.Id" class="btn btn-sm btn-info">View</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p>You haven't posted any ads yet. <a asp-controller="Ads" asp-action="Create">Create your first ad!</a></p>
+        }
+    </div>
+</div>

@@ -30,13 +30,13 @@
                     <select name="categoryId" class="form-select" 
                             onchange="this.form.submit()">
                         <option value="">All Categories</option>
-                        <option value="1">Electronics</option>
-                        <option value="2">Vehicles</option>
-                        <option value="3">Furniture</option>
-                        <option value="4">Clothing</option>
-                        <option value="5">Books</option>
-                        <option value="6">Sports</option>
-                        <option value="7">Other</option>
+                        @if (ViewBag.Categories != null)
+                        {
+                            @foreach (var category in ViewBag.Categories)
+                            {
+                                <option value="@category.Id">@category.Name</option>
+                            }
+                        }
                     </select>
                 </div>
                 <div class="col-md-2">

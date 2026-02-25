@@ -1,0 +1,64 @@
+@model IEnumerable<ConnectBuySellToday.Application.DTOs.AdDto>
+
+@{
+    ViewData["Title"] = "My Ads";
+}
+
+<div class="container">
+    <h1>My Ads</h1>
+    <p>
+        <a asp-controller="Ads" asp-action="Create" class="btn btn-primary">Create New Ad</a>
+    </p>
+    
+    @if (Model.Any())
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Title</th>
+                    <th>Price</th>
+                    <th>Category</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var ad in Model)
+                {
+                    <tr>
+                        <td>
+                            @if (!string.IsNullOrEmpty(ad.MainImageUrl))
+                            {
+                                <img src="@ad.MainImageUrl" alt="@ad.Title" style="width: 80px; height: 80px; object-fit: cover;">
+                            }
+                            else
+                            {
+                                <span class="text-muted">No Image</span>
+                            }
+                        </td>
+                        <td>@ad.Title</td>
+                        <td>$@ad.Price</td>
+                        <td>@ad.CategoryName</td>
+                        <td>
+                            <span class="badge bg-@(ad.Status == ConnectBuySellToday.Domain.Enums.AdStatus.Active ? "success" : "secondary")">
+                                @ad.Status
+                            </span>
+                        </td>
+                        <td>@ad.CreatedAt.ToShortDateString()</td>
+                        <td>
+                            <a asp-controller="Ads" asp-action="Details" asp-route-id="@ad.Id" class="btn btn-sm btn-info">View</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            You haven't posted any ads yet. <a asp-controller="Ads" asp-action="Create">Create your first ad!</a>
+        </div>
+    }
+</div>

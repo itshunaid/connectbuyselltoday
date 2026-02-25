@@ -1,26 +1,35 @@
 using ConnectBuySellToday.Application.DTOs;
 using ConnectBuySellToday.Application.Interfaces;
 using ConnectBuySellToday.Domain.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
+using System.Security.Claims;
 
 namespace ConnectBuySellToday.Web.Controllers;
 
+[Authorize]
 public class AdsController : Controller
 {
     private readonly IAdService _adService;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<AdsController> _logger;
+    private readonly IOutputCacheStore _outputCacheStore;
 
-    public AdsController(IAdService adService, IUnitOfWork unitOfWork, ILogger<AdsController> logger)
+    public AdsController(IAdService adService, IUnitOfWork unitOfWork, ILogger<AdsController> logger, IOutputCacheStore outputCacheStore)
     {
         _adService = adService;
         _unitOfWork = unitOfWork;
         _logger = logger;
+        _outputCacheStore = outputCacheStore;
     }
 
+    [AllowAnonymous]
     public async Task<IActionResult> Index(string? searchQuery, Guid? categoryId)
     {
         var ads = await _adService.SearchAdsAsync(searchQuery, categoryId);
+        var categories = await _unitOfWork.Categories.GetAllAsync();
+        ViewBag.Categories = categories;
         return View(ads);
     }
 
@@ -43,8 +52,12 @@ public class AdsController : Controller
             return View(adDto);
         }
 
-        // Mocking a seller ID for now (usually comes from User.Identity)
-        var sellerId = "user-123";
+        // Get the current user ID from Identity
+        var sellerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(sellerId))
+        {
+            return RedirectToAction("Login", "Account");
+        }
 
         // Handle file upload
         IEnumerable<IFormFile>? images = null;
@@ -54,13 +67,19 @@ public class AdsController : Controller
         }
 
         var success = await _adService.CreateAdAsync(adDto, sellerId, images);
-        if (success) return RedirectToAction(nameof(Index));
+        if (success) 
+        {
+            // Invalidate homepage cache when new ad is created
+            await _outputCacheStore.EvictByTagAsync("home", default);
+            return RedirectToAction(nameof(Index));
+        }
 
         var allCategories = await _unitOfWork.Categories.GetAllAsync();
         ViewBag.Categories = allCategories;
         return View(adDto);
     }
 
+    [AllowAnonymous]
     public async Task<IActionResult> Details(Guid id)
     {
         var ad = await _adService.GetAdByIdAsync(id);

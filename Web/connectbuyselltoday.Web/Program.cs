@@ -1,8 +1,11 @@
 using ConnectBuySellToday.Application.Interfaces;
 using ConnectBuySellToday.Application.Services;
+using ConnectBuySellToday.Domain.Entities;
 using ConnectBuySellToday.Domain.Interfaces;
 using ConnectBuySellToday.Infrastructure.Data;
 using ConnectBuySellToday.Infrastructure.Services;
+using ConnectBuySellToday.Web.Hubs;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,17 +17,51 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Add Identity
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => {
+    // Password settings
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequiredLength = 6;
+    
+    // User settings
+    options.User.RequireUniqueEmail = true;
+})
+.AddEntityFrameworkStores<ApplicationDbContext>()
+.AddDefaultTokenProviders();
+
+// Configure cookie settings
+builder.Services.ConfigureApplicationCookie(options => {
+    options.LoginPath = "/Account/Login";
+    options.LogoutPath = "/Account/Logout";
+    options.AccessDeniedPath = "/Account/AccessDenied";
+});
+
 // Register Unit of Work
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // Register Application Services
 builder.Services.AddScoped<IAdService, AdService>();
+builder.Services.AddScoped<IMessageService, MessageService>();
+builder.Services.AddScoped<IAdminService, AdminService>();
+
+// Add SignalR
+builder.Services.AddSignalR();
 
 // Register Image Service
 builder.Services.AddScoped<IImageService, ImageService>();
 
 // Register File Service (Clean Architecture - Domain Interface)
 builder.Services.AddScoped<IFileService, LocalFileService>();
+
+// Add Memory Cache for Output Caching
+builder.Services.AddMemoryCache();
+builder.Services.AddOutputCache(options =>
+{
+    options.AddBasePolicy(builder => builder.With(c => c.HttpContext.Request.Path.StartsWithSegments("/Home")));
+});
 
 var app = builder.Build();
 
@@ -41,10 +78,17 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
+
+// Use Output Caching
+app.UseOutputCache();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+// Map SignalR Hub
+app.MapHub<ChatHub>("/chatHub");
 
 app.Run();

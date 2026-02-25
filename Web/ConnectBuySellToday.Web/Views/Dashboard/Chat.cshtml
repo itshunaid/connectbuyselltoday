@@ -1,0 +1,127 @@
+@model ChatViewModel
+
+@{
+    ViewData["Title"] = "Chat - " + Model.AdTitle;
+    var conversationId = ViewBag.ConversationId;
+}
+
+<div class="container">
+    <h2>Chat about: @Model.AdTitle</h2>
+    <p>Chatting with: @Model.OtherUserId</p>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <div id="chatMessages" class="border rounded p-3 mb-3" style="height: 400px; overflow-y: scroll;">
+                @foreach (var message in Model.Messages)
+                {
+                    <div class="mb-2 @(message.SenderId == Model.CurrentUserId ? "text-end" : "text-start")">
+                        <strong>@message.SenderId:</strong> @message.Content
+                        <br>
+                        <small class="text-muted">@message.CreatedAt.ToString("g")</small>
+                    </div>
+                }
+            </div>
+            
+            <div class="input-group">
+                <input type="text" id="messageInput" class="form-control" placeholder="Type a message..." />
+                <button id="sendButton" class="btn btn-primary">Send</button>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">Ad Details</div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(Model.AdImageUrl))
+                    {
+                        <img src="@Model.AdImageUrl" alt="@Model.AdTitle" class="img-fluid mb-2" style="max-height: 150px; object-fit: cover;">
+                    }
+                    <a asp-controller="Ads" asp-action="Details" asp-route-id="@Model.AdId" class="btn btn-info">View Full Ad</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/chatHub")
+            .build();
+
+        const adId = "@Model.AdId";
+        const currentUserId = "@Model.CurrentUserId";
+        const otherUserId = "@Model.OtherUserId";
+        const conversationId = "@conversationId";
+
+        async function start() {
+            try {
+                await connection.start();
+                console.log("SignalR Connected.");
+                
+                // Join the conversation group
+                await connection.invoke("JoinConversation", conversationId);
+            } catch (err) {
+                console.error(err);
+                setTimeout(start, 5000);
+            }
+        }
+
+        connection.on("ReceiveMessage", function (data) {
+            // Display message regardless of sender
+            const chatDiv = document.getElementById("chatMessages");
+            const messageDiv = document.createElement("div");
+            const isCurrentUser = data.senderId === currentUserId;
+            messageDiv.className = "mb-2 " + (isCurrentUser ? "text-end" : "text-start");
+            messageDiv.innerHTML = `
+                <strong>${data.senderName || data.senderId}:</strong> ${data.message}
+                <br><small class="text-muted">${new Date(data.timestamp).toLocaleString()}</small>
+            `;
+            chatDiv.appendChild(messageDiv);
+            chatDiv.scrollTop = chatDiv.scrollHeight;
+        });
+
+        document.getElementById("sendButton").addEventListener("click", async function () {
+            const message = document.getElementById("messageInput").value;
+            if (message.trim() === "") return;
+
+            try {
+                // Send via SignalR hub
+                await connection.invoke("SendMessage", conversationId, otherUserId, message, currentUserId);
+                document.getElementById("messageInput").value = "";
+            } catch (err) {
+                console.error(err);
+                // Fallback to controller action
+                try {
+                    const response = await fetch('@Url.Action("SendMessage", "Dashboard")', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('input[name="__RequestVerificationToken"]')?.value
+                        },
+                        body: JSON.stringify({
+                            adId: adId,
+                            receiverId: otherUserId,
+                            message: message
+                        })
+                    });
+                    if (response.ok) {
+                        document.getElementById("messageInput").value = "";
+                    }
+                } catch (err2) {
+                    console.error(err2);
+                }
+            }
+        });
+
+        // Allow sending with Enter key
+        document.getElementById("messageInput").addEventListener("keypress", function (e) {
+            if (e.key === "Enter") {
+                document.getElementById("sendButton").click();
+            }
+        });
+
+        start();
+    </script>
+}

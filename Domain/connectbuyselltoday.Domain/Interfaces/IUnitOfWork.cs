@@ -1,21 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ConnectBuySellToday.Domain.Entities;
 
-namespace ConnectBuySellToday.Domain.Interfaces
+namespace ConnectBuySellToday.Domain.Interfaces;
+
+public interface IUnitOfWork : IDisposable
 {
-    public interface IUnitOfWork : IDisposable
-    {
-        IAdRepository Ads { get; }
-        ICategoryRepository Categories { get; }
+    IAdRepository Ads { get; }
+    ICategoryRepository Categories { get; }
+    IAdImageRepository AdsImage { get; }
+    IMessageRepository Messages { get; }
+    IUserRepository Users { get; }
 
-        IAdImageRepository AdsImage { get; }
-
-        IMessageRepository Messages { get; }
-        // You can add IMessageRepository here later
-
-        Task<int> CompleteAsync(); // Saves all changes to the DB
-    }
+    Task<int> CompleteAsync();
 }

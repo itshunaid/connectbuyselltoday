@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace ConnectBuySellToday.Domain.Interfaces
 {
-    public interface IMessageRepository : IGenericRepository<Message>
-    {
-        Task<IEnumerable<Message>> GetConversationAsync(string user1Id, string user2Id, Guid adId);
-        Task<IEnumerable<Message>> GetUserInboxAsync(string userId);
-    }
+public interface IMessageRepository : IGenericRepository<Message>
+{
+    Task<IEnumerable<Message>> GetConversationAsync(string user1Id, string user2Id, Guid adId);
+    Task<IEnumerable<Message>> GetUserInboxAsync(string userId);
+    Task<IEnumerable<Message>> GetUserConversationsAsync(string userId);
+}
 }

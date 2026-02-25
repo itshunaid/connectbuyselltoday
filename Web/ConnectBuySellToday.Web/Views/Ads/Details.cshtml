@@ -1,9 +1,11 @@
 @model ConnectBuySellToday.Application.DTOs.AdDto
 
 @using ConnectBuySellToday.Domain.Enums
+@using System.Security.Claims
 
 @{
     ViewData["Title"] = Model.Title;
+    var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 }
 
 <div class="container">
@@ -65,7 +67,18 @@
                 <p class="text-muted"><small>Seller ID: @Model.SellerId</small></p>
             </div>
             
-            <button class="btn btn-success btn-lg">Contact Seller</button>
+            @if (User.Identity?.IsAuthenticated == true && currentUserId != Model.SellerId)
+            {
+                <a asp-controller="Dashboard" asp-action="Chat" asp-route-adId="@Model.Id" asp-route-otherUserId="@Model.SellerId" class="btn btn-success btn-lg">Contact Seller</a>
+            }
+            else if (currentUserId == Model.SellerId)
+            {
+                <span class="btn btn-secondary btn-lg disabled">Your Ad</span>
+            }
+            else
+            {
+                <a asp-area="Identity" asp-page="/Account/Login" asp-route-returnUrl="@Url.Action("Details", "Ads", new { id = Model.Id })" class="btn btn-success btn-lg">Login to Contact Seller</a>
+            }
             <a asp-controller="Ads" asp-action="Index" class="btn btn-outline-secondary btn-lg">Back to List</a>
         </div>
     </div>

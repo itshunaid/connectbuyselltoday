@@ -1,20 +1,41 @@
-# TODO - Fix Category Dropdown Validation Error
+# TODO - Administrative Layer & Output Caching
 
-## Plan
-- [x] Seed categories with Guids in ApplicationDbContext.cs
-- [x] Update AdsController.cs to pass categories to the view
-- [x] Update Create.cshtml to use dynamic category data
+## Administrative Layer
 
-## Status: Completed
+### Domain Layer Updates
+- [x] Update AdStatus enum - add PendingReview, Rejected
+- [x] Update ApplicationUser - add IsBanned, BanReason, BanExpiresAt, CreatedAt
 
-## Changes Made:
-1. **ApplicationDbContext.cs**: Added seed data with predefined Guids matching the integer values (1-7) to maintain backward compatibility
-2. **AdsController.cs**: 
-   - Added IUnitOfWork dependency injection
-   - Updated Create GET and POST methods to fetch categories from database
-3. **Create.cshtml**: Replaced hardcoded integer options with dynamic category list from ViewBag
+### Infrastructure Layer
+- [x] Create IUserRepository interface
+- [x] Create UserRepository implementation
+- [x] Update IUnitOfWork with Users property
+- [x] Update UnitOfWork with UserManager integration
+- [x] Update IAdRepository with admin methods
+- [x] Update AdRepository with admin implementations
 
-## Next Steps:
-- Run `dotnet ef migrations add SeedCategories` to create migration for seed data
-- Run `dotnet ef database update` to apply the migration
-- Test the application
+### Application Layer
+- [x] Create IAdminService interface
+- [x] Create AdminService implementation
+
+### Web Layer
+- [x] Create AdminController
+- [x] Create Admin Dashboard view (Index.cshtml)
+- [x] Create Admin Users Management view (Users.cshtml)
+- [x] Create Admin Pending Ads view (PendingAds.cshtml)
+- [x] Create Admin Ads Management view (Ads.cshtml)
+- [x] Update Program.cs with admin service registration
+- [x] Add Admin link to navigation in _Layout.cshtml
+
+## Output Caching
+
+### Program.cs Updates
+- [x] Add memory cache services
+- [x] Configure output caching middleware
+
+### Controller Updates
+- [x] Update HomeController with cache attributes (60 seconds, "home" tag)
+- [x] Update AdsController with cache invalidation on Create
+- [x] Update AdminController with cache invalidation on ad operations
+
+## Progress: 17/17 tasks completed

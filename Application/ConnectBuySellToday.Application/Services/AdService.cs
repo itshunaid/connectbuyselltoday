@@ -38,47 +38,26 @@ public class AdService : IAdService
         });
     }
 
-    public async Task<IEnumerable<AdDto>> SearchAdsAsync(string? searchQuery, Guid? categoryId)
+public async Task<IEnumerable<AdDto>> SearchAdsAsync(string? searchQuery, Guid? categoryId)
+{
+    // Use the new efficient DB-level filtering method
+    var ads = await _unitOfWork.Ads.GetFilteredAdsAsync(searchQuery, categoryId);
+
+    return ads.Select(a => new AdDto
     {
-        IEnumerable<ProductAd> ads;
-
-        if (!string.IsNullOrWhiteSpace(searchQuery) && categoryId.HasValue)
-        {
-            // Search by both query and category
-            var searchResults = await _unitOfWork.Ads.SearchAdsAsync(searchQuery);
-            ads = searchResults.Where(a => a.CategoryId == categoryId.Value);
-        }
-        else if (!string.IsNullOrWhiteSpace(searchQuery))
-        {
-            // Search by query only
-            ads = await _unitOfWork.Ads.SearchAdsAsync(searchQuery);
-        }
-        else if (categoryId.HasValue)
-        {
-            // Filter by category only
-            ads = await _unitOfWork.Ads.GetAdsByCategoryAsync(categoryId.Value);
-        }
-        else
-        {
-            // Get all recent ads
-            ads = await _unitOfWork.Ads.GetRecentAdsAsync(50);
-        }
-
-        return ads.Select(a => new AdDto
-        {
-            Id = a.Id,
-            Title = a.Title,
-            Description = a.Description,
-            Price = a.Price,
-            Status = a.Status,
-            CategoryId = a.CategoryId,
-            CategoryName = a.Category?.Name ?? "General",
-            SellerId = a.SellerId,
-            MainImageUrl = a.Images.FirstOrDefault(i => i.IsMain)?.Url ?? a.Images.FirstOrDefault()?.Url,
-            ImageUrls = a.Images.Select(i => i.Url).ToList(),
-            CreatedAt = a.CreatedAt
-        });
-    }
+        Id = a.Id,
+        Title = a.Title,
+        Description = a.Description,
+        Price = a.Price,
+        Status = a.Status,
+        CategoryId = a.CategoryId,
+        CategoryName = a.Category?.Name ?? "General",
+        SellerId = a.SellerId,
+        MainImageUrl = a.Images.FirstOrDefault(i => i.IsMain)?.Url ?? a.Images.FirstOrDefault()?.Url,
+        ImageUrls = a.Images.Select(i => i.Url).ToList(),
+        CreatedAt = a.CreatedAt
+    });
+}
 
     public async Task<IEnumerable<AdDto>> GetAdsByCategoryAsync(Guid categoryId)
     {
@@ -295,5 +274,31 @@ public class AdService : IAdService
         var result = await _unitOfWork.CompleteAsync();
 
         return result > 0;
+    }
+
+    public async Task<IEnumerable<AdDto>> GetAdsByUserIdAsync(string userId)
+    {
+        var ads = await _unitOfWork.Ads.GetAdsByUserIdAsync(userId);
+
+        return ads.Select(a => new AdDto
+        {
+            Id = a.Id,
+            Title = a.Title,
+            Description = a.Description,
+            Price = a.Price,
+            Status = a.Status,
+            CategoryId = a.CategoryId,
+            CategoryName = a.Category?.Name ?? "General",
+            SellerId = a.SellerId,
+            MainImageUrl = a.Images.FirstOrDefault(i => i.IsMain)?.Url ?? a.Images.FirstOrDefault()?.Url,
+            ImageUrls = a.Images.Select(i => i.Url).ToList(),
+            CreatedAt = a.CreatedAt
+        });
+    }
+
+    public async Task<IEnumerable<AdDto>> GetAdsBySellerIdAsync(string sellerId)
+    {
+        // Reuse the existing method
+        return await GetAdsByUserIdAsync(sellerId);
     }
 }

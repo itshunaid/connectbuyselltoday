@@ -1,0 +1,36 @@
+@model IEnumerable<ConnectBuySellToday.Application.DTOs.ConversationDto>
+
+@{
+    ViewData["Title"] = "My Chats";
+}
+
+<div class="container">
+    <h1>My Conversations</h1>
+    
+    @if (Model.Any())
+    {
+        <div class="list-group">
+            @foreach (var conversation in Model)
+            {
+                <a asp-action="Chat" asp-route-adId="@conversation.AdId" asp-route-otherUserId="@conversation.OtherUserId" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">@conversation.AdTitle</h5>
+                        <small>@conversation.LastMessageTime.ToShortDateString()</small>
+                    </div>
+                    <p class="mb-1">@conversation.LastMessage</p>
+                    <small>Chat with: @conversation.OtherUserId</small>
+                    @if (conversation.UnreadCount > 0)
+                    {
+                        <span class="badge bg-primary">@conversation.UnreadCount unread</span>
+                    }
+                </a>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            You don't have any conversations yet. Start by browsing ads and contacting sellers!
+        </div>
+    }
+</div>

@@ -1,0 +1,83 @@
+@model IEnumerable<ConnectBuySellToday.Application.DTOs.AdDto>
+
+@{
+    ViewData["Title"] = "Manage Ads";
+}
+
+<div class="container">
+    <h1>Manage Ads</h1>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    <div class="mb-3">
+        <a asp-action="Ads" asp-route-status="" class="btn btn-outline-primary">All</a>
+        <a asp-action="Ads" asp-route-status="1" class="btn btn-outline-success">Active</a>
+        <a asp-action="Ads" asp-route-status="2" class="btn btn-outline-secondary">Sold</a>
+        <a asp-action="Ads" asp-route-status="3" class="btn btn-outline-dark">Hidden</a>
+        <a asp-action="Ads" asp-route-status="5" class="btn btn-outline-warning">Pending</a>
+        <a asp-action="Ads" asp-route-status="6" class="btn btn-outline-danger">Rejected</a>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Price</th>
+                <th>Category</th>
+                <th>Status</th>
+                <th>Created</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ad in Model)
+            {
+                <tr>
+                    <td>
+                        <a asp-controller="Ads" asp-action="Details" asp-route-id="@ad.Id">@ad.Title</a>
+                    </td>
+                    <td>$@ad.Price</td>
+                    <td>@ad.CategoryName</td>
+                    <td>
+                        <span class="badge bg-@GetStatusBadge(ad.Status)">@ad.Status</span>
+                    </td>
+                    <td>@ad.CreatedAt.ToShortDateString()</td>
+                    <td>
+                        @if (ad.Status == ConnectBuySellToday.Domain.Enums.AdStatus.Hidden)
+                        {
+                            <a asp-action="ShowAd" asp-route-id="@ad.Id" class="btn btn-success btn-sm">Show</a>
+                        }
+                        else if (ad.Status == ConnectBuySellToday.Domain.Enums.AdStatus.Active)
+                        {
+                            <a asp-action="HideAd" asp-route-id="@ad.Id" class="btn btn-dark btn-sm">Hide</a>
+                        }
+                        <a asp-action="DeleteAd" asp-route-id="@ad.Id" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@functions {
+    string GetStatusBadge(ConnectBuySellToday.Domain.Enums.AdStatus status)
+    {
+        return status switch
+        {
+            ConnectBuySellToday.Domain.Enums.AdStatus.Active => "success",
+            ConnectBuySellToday.Domain.Enums.AdStatus.Sold => "secondary",
+            ConnectBuySellToday.Domain.Enums.AdStatus.Hidden => "dark",
+            ConnectBuySellToday.Domain.Enums.AdStatus.Expired => "warning",
+            ConnectBuySellToday.Domain.Enums.AdStatus.PendingReview => "warning",
+            ConnectBuySellToday.Domain.Enums.AdStatus.Rejected => "danger",
+            _ => "primary"
+        };
+    }
+}

@@ -1,6 +1,7 @@
 using ConnectBuySellToday.Application.Interfaces;
 using ConnectBuySellToday.Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using System.Diagnostics;
 
 namespace ConnectBuySellToday.Web.Controllers
@@ -16,6 +17,7 @@ namespace ConnectBuySellToday.Web.Controllers
             _adService = adService;
         }
 
+        [OutputCache(Duration = 60, Tags = new[] { "home" })]
         public async Task<IActionResult> Index()
         {
             var ads = await _adService.GetLatestAdsAsync();

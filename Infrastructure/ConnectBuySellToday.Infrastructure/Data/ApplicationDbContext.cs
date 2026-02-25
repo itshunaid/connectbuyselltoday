@@ -1,14 +1,11 @@
-﻿
-using ConnectBuySellToday.Domain.Common;
+﻿using ConnectBuySellToday.Domain.Common;
 using ConnectBuySellToday.Domain.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Reflection.Emit;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace ConnectBuySellToday.Infrastructure.Data;
 
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
@@ -20,8 +17,17 @@ public class ApplicationDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        
         // Apply configurations for relationships, decimal precision, etc.
         modelBuilder.Entity<ProductAd>().Property(p => p.Price).HasPrecision(18, 2);
+
+        // SellerId is nullable to support SetNull delete behavior when a user is deleted
+        modelBuilder.Entity<ProductAd>()
+            .HasOne(p => p.Seller)
+            .WithMany()
+            .HasForeignKey(p => p.SellerId)
+            .OnDelete(DeleteBehavior.SetNull)  // Set null instead of cascade when user is deleted
+            .IsRequired(false);  // Mark as optional (nullable) to support SetNull
 
         // Seed categories with predefined Guids to match the dropdown values
         modelBuilder.Entity<Category>().HasData(

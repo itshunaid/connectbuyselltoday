@@ -15,4 +15,6 @@ public interface IAdService
     Task<bool> AddImagesToAdAsync(Guid adId, IEnumerable<IFormFile> images, string sellerId);
     Task<bool> DeleteImageFromAdAsync(Guid adId, Guid imageId, string sellerId);
     Task<bool> SetMainImageAsync(Guid adId, Guid imageId, string sellerId);
+    Task<IEnumerable<AdDto>> GetAdsByUserIdAsync(string userId);
+    Task<IEnumerable<AdDto>> GetAdsBySellerIdAsync(string sellerId);
 }

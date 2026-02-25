@@ -1,0 +1,84 @@
+@model ConnectBuySellToday.Application.Interfaces.AdminDashboardDto
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container">
+    <h1>Admin Dashboard</h1>
+    
+    <div class="row mt-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Total Users</h5>
+                    <p class="card-text display-4">@Model.TotalUsers</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Active Users</h5>
+                    <p class="card-text display-4">@Model.ActiveUsers</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-danger mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Banned Users</h5>
+                    <p class="card-text display-4">@Model.BannedUsers</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Pending Ads</h5>
+                    <p class="card-text display-4">@Model.PendingAds</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Total Ads</h5>
+                    <p class="card-text display-6">@Model.TotalAds</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Active Ads</h5>
+                    <p class="card-text display-6">@Model.ActiveAds</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Sold Ads</h5>
+                    <p class="card-text display-6">@Model.SoldAds</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <a asp-controller="Admin" asp-action="PendingAds" class="btn btn-warning btn-lg btn-block">
+                Review Pending Ads (@Model.PendingAds)
+            </a>
+        </div>
+        <div class="col-md-6">
+            <a asp-controller="Admin" asp-action="Users" class="btn btn-primary btn-lg btn-block">
+                Manage Users
+            </a>
+        </div>
+    </div>
+</div>
