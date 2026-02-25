@@ -129,7 +129,7 @@ public async Task<IEnumerable<AdDto>> SearchAdsAsync(string? searchQuery, Guid? 
             Price = adDto.Price,
             SellerId = sellerId,
             CategoryId = adDto.CategoryId,
-            Status = Domain.Enums.AdStatus.Active
+            Status = Domain.Enums.AdStatus.PendingReview
         };
 
         // Add the image

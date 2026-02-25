@@ -1,41 +1,17 @@
-# TODO - Administrative Layer & Output Caching
+# TODO - Admin Moderation & Performance Optimization
 
-## Administrative Layer
+## Task 1: Admin Moderation (Approve/Reject Ads)
+- [ ] 1.1 Update AdService.CreateAdAsync to set status to PendingReview
+- [ ] 1.2 Update AdRepository.GetRecentAdsAsync to filter by Active status only
+- [ ] 1.3 Verify AdRepository.GetFilteredAdsAsync also filters by Active status
 
-### Domain Layer Updates
-- [x] Update AdStatus enum - add PendingReview, Rejected
-- [x] Update ApplicationUser - add IsBanned, BanReason, BanExpiresAt, CreatedAt
+## Task 2: Performance Optimization - Caching Categories
+- [ ] 2.1 Create ICategoryService interface
+- [ ] 2.2 Create CategoryService with IMemoryCache implementation
+- [ ] 2.3 Register CategoryService in Program.cs
+- [ ] 2.4 Update HomeController to include categories in ViewBag
+- [ ] 2.5 Update Layout to display categories navigation
 
-### Infrastructure Layer
-- [x] Create IUserRepository interface
-- [x] Create UserRepository implementation
-- [x] Update IUnitOfWork with Users property
-- [x] Update UnitOfWork with UserManager integration
-- [x] Update IAdRepository with admin methods
-- [x] Update AdRepository with admin implementations
-
-### Application Layer
-- [x] Create IAdminService interface
-- [x] Create AdminService implementation
-
-### Web Layer
-- [x] Create AdminController
-- [x] Create Admin Dashboard view (Index.cshtml)
-- [x] Create Admin Users Management view (Users.cshtml)
-- [x] Create Admin Pending Ads view (PendingAds.cshtml)
-- [x] Create Admin Ads Management view (Ads.cshtml)
-- [x] Update Program.cs with admin service registration
-- [x] Add Admin link to navigation in _Layout.cshtml
-
-## Output Caching
-
-### Program.cs Updates
-- [x] Add memory cache services
-- [x] Configure output caching middleware
-
-### Controller Updates
-- [x] Update HomeController with cache attributes (60 seconds, "home" tag)
-- [x] Update AdsController with cache invalidation on Create
-- [x] Update AdminController with cache invalidation on ad operations
-
-## Progress: 17/17 tasks completed
+## Implementation Notes:
+- Admin moderation flow: User creates ad → Status = PendingReview → Admin approves → Status = Active
+- Categories will be cached for 30 minutes to improve performance

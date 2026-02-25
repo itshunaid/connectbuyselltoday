@@ -13,13 +13,15 @@ public class AdsController : Controller
 {
     private readonly IAdService _adService;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ICategoryService _categoryService;
     private readonly ILogger<AdsController> _logger;
     private readonly IOutputCacheStore _outputCacheStore;
 
-    public AdsController(IAdService adService, IUnitOfWork unitOfWork, ILogger<AdsController> logger, IOutputCacheStore outputCacheStore)
+    public AdsController(IAdService adService, IUnitOfWork unitOfWork, ICategoryService categoryService, ILogger<AdsController> logger, IOutputCacheStore outputCacheStore)
     {
         _adService = adService;
         _unitOfWork = unitOfWork;
+        _categoryService = categoryService;
         _logger = logger;
         _outputCacheStore = outputCacheStore;
     }
@@ -28,18 +30,18 @@ public class AdsController : Controller
     public async Task<IActionResult> Index(string? searchQuery, Guid? categoryId)
     {
         var ads = await _adService.SearchAdsAsync(searchQuery, categoryId);
-        var categories = await _unitOfWork.Categories.GetAllAsync();
+        var categories = await _categoryService.GetAllCategoriesAsync();
         ViewBag.Categories = categories;
         return View(ads);
     }
 
     // GET: /Ads/Create
     public async Task<IActionResult> Create()
-    {
-        var categories = await _unitOfWork.Categories.GetAllAsync();
-        ViewBag.Categories = categories;
-        return View();
-    }
+{
+var categories = await _categoryService.GetAllCategoriesAsync();
+ViewBag.Categories = categories;
+return View();
+}
 
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -47,7 +49,7 @@ public class AdsController : Controller
     {
         if (!ModelState.IsValid)
         {
-            var categories = await _unitOfWork.Categories.GetAllAsync();
+            var categories = await _categoryService.GetAllCategoriesAsync();
             ViewBag.Categories = categories;
             return View(adDto);
         }
@@ -74,7 +76,7 @@ public class AdsController : Controller
             return RedirectToAction(nameof(Index));
         }
 
-        var allCategories = await _unitOfWork.Categories.GetAllAsync();
+        var allCategories = await _categoryService.GetAllCategoriesAsync();
         ViewBag.Categories = allCategories;
         return View(adDto);
     }

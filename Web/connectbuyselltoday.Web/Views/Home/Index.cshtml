@@ -9,6 +9,27 @@
     <p>Find the best deals on products near you!</p>
 </div>
 
+@{
+    var categories = ViewBag.Categories as IEnumerable<CategoryDto>;
+}
+
+@if (categories != null && categories.Any())
+{
+    <div class="container mb-4">
+        <h5 class="mb-3">Browse by Category</h5>
+        <div class="row">
+            @foreach (var category in categories)
+            {
+                <div class="col-auto mb-2">
+                    <a asp-controller="Ads" asp-action="Index" asp-route-categoryId="@category.Id" class="btn btn-outline-primary">
+                        @category.Name
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+}
+
 <div class="container">
     <h2 class="mb-3">Latest Ads</h2>
     

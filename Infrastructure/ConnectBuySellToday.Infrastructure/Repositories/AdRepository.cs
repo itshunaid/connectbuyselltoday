@@ -35,6 +35,7 @@ public class AdRepository : GenericRepository<ProductAd>, IAdRepository
     public async Task<IEnumerable<ProductAd>> GetRecentAdsAsync(int count)
     {
         return await _context.ProductAds
+            .Where(x => x.Status == Domain.Enums.AdStatus.Active)
             .OrderByDescending(x => x.CreatedAt)
             .Take(count)
             .Include(x => x.Category)
@@ -62,7 +63,8 @@ public class AdRepository : GenericRepository<ProductAd>, IAdRepository
     {
         IQueryable<ProductAd> query = _context.ProductAds
             .Include(x => x.Images)
-            .Include(x => x.Category);
+            .Include(x => x.Category)
+            .Where(x => x.Status == Domain.Enums.AdStatus.Active);
 
         if (!string.IsNullOrEmpty(search))
         {

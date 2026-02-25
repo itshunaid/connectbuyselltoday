@@ -46,6 +46,7 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAdService, AdService>();
 builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 // Add SignalR
 builder.Services.AddSignalR();
