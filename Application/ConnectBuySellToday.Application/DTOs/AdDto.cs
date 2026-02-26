@@ -17,6 +17,11 @@ public class AdDto
     public List<string> ImageUrls { get; set; } = new();
     public DateTime CreatedAt { get; set; }
     
+    // Location properties
+    public double? Latitude { get; set; }
+    public double? Longitude { get; set; }
+    public string? CityName { get; set; }
+    
     // For file upload
     public IFormFile? ImageFile { get; set; }
 }

@@ -22,6 +22,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         // Apply configurations for relationships, decimal precision, etc.
         modelBuilder.Entity<ProductAd>().Property(p => p.Price).HasPrecision(18, 2);
 
+        // Configure Location as an owned type
+        modelBuilder.Entity<ProductAd>().OwnsOne(p => p.Location);
+
         // SellerId is nullable to support SetNull delete behavior when a user is deleted
         modelBuilder.Entity<ProductAd>()
             .HasOne(p => p.Seller)

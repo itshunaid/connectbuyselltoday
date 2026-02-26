@@ -16,6 +16,9 @@ namespace ConnectBuySellToday.Domain.Entities
         public decimal Price { get; set; }
         public AdStatus Status { get; set; } = AdStatus.Active;
 
+        // Location value object
+        public Location? Location { get; set; }
+
         // Foreign Keys
         public Guid CategoryId { get; set; }
         public Category Category { get; set; } = null!;

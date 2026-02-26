@@ -16,7 +16,7 @@ public interface IAdRepository : IGenericRepository<ProductAd>
     Task<ProductAd?> GetAdByIdWithDetailsAsync(Guid id);
     
     // New method for efficient DB-level filtering
-    Task<IEnumerable<ProductAd>> GetFilteredAdsAsync(string? search, Guid? categoryId);
+    Task<IEnumerable<ProductAd>> GetFilteredAdsAsync(string? search, Guid? categoryId, double? userLatitude = null, double? userLongitude = null, double? radiusInKm = null);
     Task<IEnumerable<ProductAd>> GetAdsByUserIdAsync(string userId);
     
     // Admin methods

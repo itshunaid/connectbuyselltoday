@@ -6,7 +6,7 @@ namespace ConnectBuySellToday.Application.Interfaces;
 public interface IAdService
 {
     Task<IEnumerable<AdDto>> GetLatestAdsAsync(string? searchQuery = null);
-    Task<IEnumerable<AdDto>> SearchAdsAsync(string? searchQuery, Guid? categoryId);
+    Task<IEnumerable<AdDto>> SearchAdsAsync(string? searchQuery, Guid? categoryId, double? userLatitude = null, double? userLongitude = null, double? radiusInKm = null);
     Task<IEnumerable<AdDto>> GetAdsByCategoryAsync(Guid categoryId);
     Task<AdDto?> GetAdByIdAsync(Guid id);
     Task<bool> CreateAdAsync(AdDto adDto, string sellerId, IEnumerable<IFormFile>? images = null);

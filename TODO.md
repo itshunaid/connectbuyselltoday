@@ -1,19 +1,43 @@
-# TODO - Favorite Feature Implementation
+# Task: Add Location Value Object and Geographic Filtering
 
-## Domain Layer
-- [x] Create Favorite entity in Domain/Entities/Favorite.cs
-- [x] Create IFavoriteRepository interface in Domain/Interfaces/IFavoriteRepository.cs
+## Plan
+1. [x] Confirm plan with user
+2. [x] Create Location Value Object
+3. [x] Update ProductAd Entity
+4. [x] Update IAdRepository Interface
+5. [x] Update AdRepository with Haversine formula
+6. [x] Update ApplicationDbContext
+7. [x] Update AdDto
+8. [x] Update IAdService Interface
+9. [x] Update AdService
 
-## Infrastructure Layer
-- [x] Update ApplicationDbContext.cs - add DbSet<Favorite> and configure relationships
-- [x] Update IAdRepository.cs - add GetFavoriteAdsByUserIdAsync method
-- [x] Implement GetFavoriteAdsByUserIdAsync in AdRepository.cs
-- [x] Create FavoriteRepository.cs in Infrastructure/Repositories/
-- [x] Update IUnitOfWork.cs - add Favorite repository property
-- [x] Update UnitOfWork.cs - implement Favorite repository
+## Implementation Steps Completed
 
-## Application Layer
-- [x] Create FavoriteService.cs with ToggleFavoriteAsync method
+### Step 1: Create Location Value Object ✅
+- Created `Domain/ConnectBuySellToday.Domain/Common/Location.cs`
 
-## Database
-- [x] Create migration for Favorite entity
+### Step 2: Update ProductAd Entity ✅
+- Added Location property to ProductAd
+
+### Step 3: Update IAdRepository Interface ✅
+- Updated GetFilteredAdsAsync signature with userLatitude, userLongitude, radiusInKm
+
+### Step 4: Update AdRepository ✅
+- Implemented Haversine formula in LINQ query for SQL translation
+
+### Step 5: Update ApplicationDbContext ✅
+- Configured Location as owned type for EF Core
+
+### Step 6: Update AdDto ✅
+- Added Latitude, Longitude, CityName properties
+
+### Step 7: Update IAdService Interface ✅
+- Updated SearchAdsAsync signature with location parameters
+
+### Step 8: Update AdService ✅
+- Passed location parameters to repository
+- Updated CreateAdAsync and UpdateAdAsync to handle Location
+
+## Followup Steps
+- Run migrations to add the new Location column to database
+- Test the geographic filtering functionality

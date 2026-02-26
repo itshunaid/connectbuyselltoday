@@ -2,6 +2,7 @@
 using ConnectBuySellToday.Domain.Interfaces;
 using ConnectBuySellToday.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace ConnectBuySellToday.Infrastructure.Repositories;
 
@@ -59,7 +60,7 @@ public class AdRepository : GenericRepository<ProductAd>, IAdRepository
             .FirstOrDefaultAsync(x => x.Id == id);
     }
 
-    public async Task<IEnumerable<ProductAd>> GetFilteredAdsAsync(string? search, Guid? categoryId)
+    public async Task<IEnumerable<ProductAd>> GetFilteredAdsAsync(string? search, Guid? categoryId, double? userLatitude = null, double? userLongitude = null, double? radiusInKm = null)
     {
         IQueryable<ProductAd> query = _context.ProductAds
             .Include(x => x.Images)
@@ -74,6 +75,24 @@ public class AdRepository : GenericRepository<ProductAd>, IAdRepository
         if (categoryId.HasValue)
         {
             query = query.Where(x => x.CategoryId == categoryId.Value);
+        }
+
+        // Apply Haversine formula for geographic filtering
+        if (userLatitude.HasValue && userLongitude.HasValue && radiusInKm.HasValue)
+        {
+            double lat = userLatitude.Value;
+            double lon = userLongitude.Value;
+            double radius = radiusInKm.Value;
+
+            // Haversine formula that translates to SQL
+            // Distance = 6371 * acos(cos(lat) * cos(adLat) * cos(adLon - lon) + sin(lat) * sin(adLat))
+            // Using converted to radians values for SQL translation
+            query = query.Where(x => x.Location != null &&
+                (6371 * Math.Acos(
+                    Math.Cos(lat * Math.PI / 180) * Math.Cos(x.Location.Latitude * Math.PI / 180) * 
+                    Math.Cos((x.Location.Longitude - lon) * Math.PI / 180) +
+                    Math.Sin(lat * Math.PI / 180) * Math.Sin(x.Location.Latitude * Math.PI / 180)
+                )) <= radius);
         }
 
         return await query.OrderByDescending(x => x.CreatedAt).ToListAsync();

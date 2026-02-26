@@ -34,30 +34,36 @@ public class AdService : IAdService
             SellerId = a.SellerId,
             MainImageUrl = a.Images.FirstOrDefault(i => i.IsMain)?.Url ?? a.Images.FirstOrDefault()?.Url,
             ImageUrls = a.Images.Select(i => i.Url).ToList(),
-            CreatedAt = a.CreatedAt
+            CreatedAt = a.CreatedAt,
+            Latitude = a.Location?.Latitude,
+            Longitude = a.Location?.Longitude,
+            CityName = a.Location?.CityName
         });
     }
 
-public async Task<IEnumerable<AdDto>> SearchAdsAsync(string? searchQuery, Guid? categoryId)
-{
-    // Use the new efficient DB-level filtering method
-    var ads = await _unitOfWork.Ads.GetFilteredAdsAsync(searchQuery, categoryId);
-
-    return ads.Select(a => new AdDto
+    public async Task<IEnumerable<AdDto>> SearchAdsAsync(string? searchQuery, Guid? categoryId, double? userLatitude = null, double? userLongitude = null, double? radiusInKm = null)
     {
-        Id = a.Id,
-        Title = a.Title,
-        Description = a.Description,
-        Price = a.Price,
-        Status = a.Status,
-        CategoryId = a.CategoryId,
-        CategoryName = a.Category?.Name ?? "General",
-        SellerId = a.SellerId,
-        MainImageUrl = a.Images.FirstOrDefault(i => i.IsMain)?.Url ?? a.Images.FirstOrDefault()?.Url,
-        ImageUrls = a.Images.Select(i => i.Url).ToList(),
-        CreatedAt = a.CreatedAt
-    });
-}
+        // Use the new efficient DB-level filtering method with location parameters
+        var ads = await _unitOfWork.Ads.GetFilteredAdsAsync(searchQuery, categoryId, userLatitude, userLongitude, radiusInKm);
+
+        return ads.Select(a => new AdDto
+        {
+            Id = a.Id,
+            Title = a.Title,
+            Description = a.Description,
+            Price = a.Price,
+            Status = a.Status,
+            CategoryId = a.CategoryId,
+            CategoryName = a.Category?.Name ?? "General",
+            SellerId = a.SellerId,
+            MainImageUrl = a.Images.FirstOrDefault(i => i.IsMain)?.Url ?? a.Images.FirstOrDefault()?.Url,
+            ImageUrls = a.Images.Select(i => i.Url).ToList(),
+            CreatedAt = a.CreatedAt,
+            Latitude = a.Location?.Latitude,
+            Longitude = a.Location?.Longitude,
+            CityName = a.Location?.CityName
+        });
+    }
 
     public async Task<IEnumerable<AdDto>> GetAdsByCategoryAsync(Guid categoryId)
     {
@@ -75,7 +81,10 @@ public async Task<IEnumerable<AdDto>> SearchAdsAsync(string? searchQuery, Guid? 
             SellerId = a.SellerId,
             MainImageUrl = a.Images.FirstOrDefault(i => i.IsMain)?.Url ?? a.Images.FirstOrDefault()?.Url,
             ImageUrls = a.Images.Select(i => i.Url).ToList(),
-            CreatedAt = a.CreatedAt
+            CreatedAt = a.CreatedAt,
+            Latitude = a.Location?.Latitude,
+            Longitude = a.Location?.Longitude,
+            CityName = a.Location?.CityName
         });
     }
 
@@ -98,7 +107,10 @@ public async Task<IEnumerable<AdDto>> SearchAdsAsync(string? searchQuery, Guid? 
             SellerId = ad.SellerId,
             MainImageUrl = ad.Images.FirstOrDefault(i => i.IsMain)?.Url ?? ad.Images.FirstOrDefault()?.Url,
             ImageUrls = ad.Images.Select(i => i.Url).ToList(),
-            CreatedAt = ad.CreatedAt
+            CreatedAt = ad.CreatedAt,
+            Latitude = ad.Location?.Latitude,
+            Longitude = ad.Location?.Longitude,
+            CityName = ad.Location?.CityName
         };
     }
 
@@ -129,7 +141,10 @@ public async Task<IEnumerable<AdDto>> SearchAdsAsync(string? searchQuery, Guid? 
             Price = adDto.Price,
             SellerId = sellerId,
             CategoryId = adDto.CategoryId,
-            Status = Domain.Enums.AdStatus.PendingReview
+            Status = Domain.Enums.AdStatus.PendingReview,
+            Location = (adDto.Latitude.HasValue && adDto.Longitude.HasValue) 
+                ? new Location(adDto.Latitude.Value, adDto.Longitude.Value, adDto.CityName ?? string.Empty)
+                : null
         };
 
         // Add the image
@@ -156,6 +171,12 @@ public async Task<IEnumerable<AdDto>> SearchAdsAsync(string? searchQuery, Guid? 
         ad.Description = adDto.Description;
         ad.Price = adDto.Price;
         ad.CategoryId = adDto.CategoryId;
+        
+        // Update location if provided
+        if (adDto.Latitude.HasValue && adDto.Longitude.HasValue)
+        {
+            ad.Location = new Location(adDto.Latitude.Value, adDto.Longitude.Value, adDto.CityName ?? string.Empty);
+        }
 
         // Handle new images if provided
         if (newImages != null && newImages.Any())
@@ -292,7 +313,10 @@ public async Task<IEnumerable<AdDto>> SearchAdsAsync(string? searchQuery, Guid? 
             SellerId = a.SellerId,
             MainImageUrl = a.Images.FirstOrDefault(i => i.IsMain)?.Url ?? a.Images.FirstOrDefault()?.Url,
             ImageUrls = a.Images.Select(i => i.Url).ToList(),
-            CreatedAt = a.CreatedAt
+            CreatedAt = a.CreatedAt,
+            Latitude = a.Location?.Latitude,
+            Longitude = a.Location?.Longitude,
+            CityName = a.Location?.CityName
         });
     }
 
