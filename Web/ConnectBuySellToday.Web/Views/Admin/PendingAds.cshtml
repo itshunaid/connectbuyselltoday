@@ -5,7 +5,7 @@
 }
 
 <div class="container">
-    <h1>Pending Ads</h1>
+    <h1 class="mb-4">Pending Ads</h1>
 
     @if (TempData["Success"] != null)
     {
@@ -16,60 +16,119 @@
         <div class="alert alert-danger">@TempData["Error"]</div>
     }
 
-    @if (!Model.Any())
-    {
-        <div class="alert alert-info">No pending ads to review.</div>
-    }
-
-    <div class="row">
-        @foreach (var ad in Model)
-        {
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    @if (!string.IsNullOrEmpty(ad.MainImageUrl))
-                    {
-                        <img src="@ad.MainImageUrl" class="card-img-top" alt="@ad.Title" style="height: 200px; object-fit: cover;">
-                    }
-                    <div class="card-body">
-                        <h5 class="card-title">@ad.Title</h5>
-                        <p class="card-text">@ad.Description.Substring(0, Math.Min(100, ad.Description.Length))...</p>
-                        <p class="card-text"><strong>Price:</strong> $@ad.Price</p>
-                        <p class="card-text"><strong>Category:</strong> @ad.CategoryName</p>
-                        <p class="card-text"><small class="text-muted">Posted: @ad.CreatedAt.ToShortDateString()</small></p>
-                        
-                        <div class="btn-group" role="group">
-                            <a asp-action="ApproveAd" asp-route-id="@ad.Id" class="btn btn-success">Approve</a>
-                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal-@ad.Id">
-                                Reject
-                            </button>
-                        </div>
-
-                        <div class="modal fade" id="rejectModal-@ad.Id" tabindex="-1">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">Reject Ad</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <div class="card">
+        <div class="card-body">
+            @if (!Model.Any())
+            {
+                <div class="alert alert-info">No pending ads to review.</div>
+            }
+            else
+            {
+                <table id="pendingAdsTable" class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Thumbnail</th>
+                            <th>Title</th>
+                            <th>Seller</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var ad in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(ad.MainImageUrl))
+                                    {
+                                        <img src="@ad.MainImageUrl" alt="@ad.Title" style="width: 80px; height: 60px; object-fit: cover;" class="rounded">
+                                    }
+                                    else
+                                    {
+                                        <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="width: 80px; height: 60px;">
+                                            <i class="bi bi-image"></i>
+                                        </div>
+                                    }
+                                </td>
+                                <td>
+                                    <strong>@ad.Title</strong><br>
+                                    <small class="text-muted">@ad.CategoryName</small>
+                                </td>
+                                <td>@ad.SellerName</td>
+                                <td>@ad.CreatedAt.ToString("MMM dd, yyyy")</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a asp-action="ApproveAd" asp-route-id="@ad.Id" class="btn btn-success btn-sm">
+                                            <i class="bi bi-check-circle me-1"></i>Approve
+                                        </a>
+                                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#rejectModal-@ad.Id">
+                                            <i class="bi bi-x-circle me-1"></i>Reject
+                                        </button>
                                     </div>
-                                    <form asp-action="RejectAd" method="post">
-                                        <div class="modal-body">
-                                            <input type="hidden" name="id" value="@ad.Id" />
-                                            <div class="mb-3">
-                                                <label class="form-label">Reason for rejection</label>
-                                                <textarea name="reason" class="form-control" required></textarea>
+                                </td>
+                            </tr>
+
+                            <!-- Rejection Reason Modal -->
+                            <div class="modal fade" id="rejectModal-@ad.Id" tabindex="-1" aria-labelledby="rejectModalLabel-@ad.Id" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="rejectModalLabel-@ad.Id">Reject Ad: @ad.Title</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <form asp-action="RejectAd" method="post">
+                                            <div class="modal-body">
+                                                <input type="hidden" name="id" value="@ad.Id" />
+                                                <div class="mb-3">
+                                                    <label class="form-label">Quick Select Reason</label>
+                                                    <select id="reasonSelect-@ad.Id" class="form-select mb-2" onchange="document.getElementById('reasonText-@ad.Id').value = this.value">
+                                                        <option value="">-- Common reasons --</option>
+                                                        <option value="Spam">Spam</option>
+                                                        <option value="Prohibited Item">Prohibited Item</option>
+                                                        <option value="Inappropriate Content">Inappropriate Content</option>
+                                                        <option value="Misleading Information">Misleading Information</option>
+                                                        <option value="Duplicate Listing">Duplicate Listing</option>
+                                                    </select>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Reason for Rejection</label>
+                                                    <textarea id="reasonText-@ad.Id" name="reason" class="form-control" rows="3" placeholder="Enter the reason for rejection..." required></textarea>
+                                                </div>
+                                                <p class="text-muted small">
+                                                    <i class="bi bi-info-circle me-1"></i>
+                                                    The seller will be notified about the rejection reason via message.
+                                                </p>
                                             </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                            <button type="submit" class="btn btn-danger">Reject Ad</button>
-                                        </div>
-                                    </form>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                <button type="submit" class="btn btn-danger">Reject Ad</button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#pendingAdsTable').DataTable({
+                language: {
+                    search: "Search ads:",
+                    lengthMenu: "Show _MENU_ entries",
+                    info: "Showing _START_ to _END_ of _TOTAL_ pending ads",
+                    emptyTable: "No pending ads found"
+                },
+                columnDefs: [
+                    { orderable: false, targets: [0, 4] }
+                ]
+            });
+        });
+    </script>
+}

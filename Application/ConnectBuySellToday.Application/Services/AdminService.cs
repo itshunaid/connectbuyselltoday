@@ -12,11 +12,13 @@ public class AdminService : IAdminService
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IMessageService _messageService;
 
-    public AdminService(UserManager<ApplicationUser> userManager, IUnitOfWork unitOfWork)
+    public AdminService(UserManager<ApplicationUser> userManager, IUnitOfWork unitOfWork, IMessageService messageService)
     {
         _userManager = userManager;
         _unitOfWork = unitOfWork;
+        _messageService = messageService;
     }
 
     // User Management
@@ -98,7 +100,7 @@ public class AdminService : IAdminService
     public async Task<IEnumerable<AdDto>> GetPendingAdsAsync()
     {
         var ads = await _unitOfWork.Ads.GetPendingAdsAsync();
-        return MapAdsToDto(ads);
+        return await MapAdsToDto(ads);
     }
 
     public async Task<IEnumerable<AdDto>> GetAllAdsAsync(AdStatus? status = null)
@@ -110,7 +112,7 @@ public class AdminService : IAdminService
             ads = ads.Where(a => a.Status == status.Value);
         }
 
-        return MapAdsToDto(ads);
+        return await MapAdsToDto(ads);
     }
 
     public async Task<bool> ApproveAdAsync(Guid adId)
@@ -131,6 +133,12 @@ public class AdminService : IAdminService
 
         ad.Status = AdStatus.Rejected;
         _unitOfWork.Ads.Update(ad);
+        
+        // Send rejection message to seller via MessageService
+        var adminUserId = "system"; // Admin user ID
+        var rejectionMessage = $"Your ad '{ad.Title}' has been rejected. Reason: {reason}";
+        await _messageService.SendMessageAsync(adminUserId, ad.SellerId, adId, rejectionMessage);
+        
         var result = await _unitOfWork.CompleteAsync();
         return result > 0;
     }
@@ -185,9 +193,22 @@ public class AdminService : IAdminService
         };
     }
 
-    private IEnumerable<AdDto> MapAdsToDto(IEnumerable<ProductAd> ads)
+    private async Task<IEnumerable<AdDto>> MapAdsToDto(IEnumerable<ProductAd> ads)
     {
-        return ads.Select(a => new AdDto
+        var adList = ads.ToList();
+        var sellerIds = adList.Select(a => a.SellerId).Distinct().ToList();
+        var sellers = new Dictionary<string, ApplicationUser>();
+        
+        foreach (var sellerId in sellerIds)
+        {
+            var seller = await _userManager.FindByIdAsync(sellerId);
+            if (seller != null)
+            {
+                sellers[sellerId] = seller;
+            }
+        }
+        
+        return adList.Select(a => new AdDto
         {
             Id = a.Id,
             Title = a.Title,
@@ -197,6 +218,9 @@ public class AdminService : IAdminService
             CategoryId = a.CategoryId,
             CategoryName = a.Category?.Name ?? "General",
             SellerId = a.SellerId,
+            SellerName = sellers.TryGetValue(a.SellerId, out var seller) 
+                ? $"{seller.FirstName} {seller.LastName}" 
+                : "Unknown",
             MainImageUrl = a.Images.FirstOrDefault(i => i.IsMain)?.Url ?? a.Images.FirstOrDefault()?.Url,
             ImageUrls = a.Images.Select(i => i.Url).ToList(),
             CreatedAt = a.CreatedAt
