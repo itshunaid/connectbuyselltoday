@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\ConnectBuySellToday\\Domain\\ConnectBuySellToday.Domain\\ConnectBuySellToday.Domain.csproj": {}
+    "c:\\ConnectBuySellToday\\Domain\\ConnectBuySellToday.Domain\\ConnectBuySellToday.Domain.csproj": {}
   },
   "projects": {
-    "C:\\ConnectBuySellToday\\Domain\\ConnectBuySellToday.Domain\\ConnectBuySellToday.Domain.csproj": {
+    "c:\\ConnectBuySellToday\\Domain\\ConnectBuySellToday.Domain\\ConnectBuySellToday.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\ConnectBuySellToday\\Domain\\ConnectBuySellToday.Domain\\ConnectBuySellToday.Domain.csproj",
+        "projectUniqueName": "c:\\ConnectBuySellToday\\Domain\\ConnectBuySellToday.Domain\\ConnectBuySellToday.Domain.csproj",
         "projectName": "ConnectBuySellToday.Domain",
-        "projectPath": "C:\\ConnectBuySellToday\\Domain\\ConnectBuySellToday.Domain\\ConnectBuySellToday.Domain.csproj",
+        "projectPath": "c:\\ConnectBuySellToday\\Domain\\ConnectBuySellToday.Domain\\ConnectBuySellToday.Domain.csproj",
         "packagesPath": "C:\\Users\\SURFACE\\.nuget\\packages\\",
-        "outputPath": "C:\\ConnectBuySellToday\\Domain\\ConnectBuySellToday.Domain\\obj\\",
+        "outputPath": "c:\\ConnectBuySellToday\\Domain\\ConnectBuySellToday.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

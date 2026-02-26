@@ -57,7 +57,11 @@ builder.Services.AddScoped<IImageService, ImageService>();
 // Register File Service (Clean Architecture - Domain Interface)
 builder.Services.AddScoped<IFileService, LocalFileService>();
 
+// Register Background Services
+builder.Services.AddHostedService<FeaturedAdExpiryService>();
+
 // Add Memory Cache for Output Caching
+
 builder.Services.AddMemoryCache();
 builder.Services.AddOutputCache(options =>
 {

@@ -1,28 +1,44 @@
 ﻿@model IEnumerable<AdDto>
 
 @{
-    ViewData["Title"] = "Home Page";
-}
-
-<div class="text-center mb-4">
-    <h1 class="display-4">Welcome to ConnectBuySellToday</h1>
-    <p>Find the best deals on products near you!</p>
-</div>
-
-@{
+    ViewData["Title"] = "Home - ConnectBuySellToday";
     var categories = ViewBag.Categories as IEnumerable<CategoryDto>;
+    var adsList = Model?.ToList() ?? new List<AdDto>();
+    var featuredAds = adsList.Where(a => a.IsFeatured && a.FeaturedExpiryDate > DateTime.UtcNow).Take(4).ToList();
+    var latestAds = adsList.OrderByDescending(a => a.CreatedAt).Take(8).ToList();
 }
 
-@if (categories != null && categories.Any())
+<!-- Hero Section -->
+@await Html.PartialAsync("_HeroSection", categories)
+
+<!-- Featured Ads Section -->
+@if (featuredAds.Any())
 {
-    <div class="container mb-4">
-        <h5 class="mb-3">Browse by Category</h5>
-        <div class="row">
-            @foreach (var category in categories)
+    <div class="container mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="fw-bold"><i class="bi bi-star-fill text-warning me-2"></i>Featured Ads</h3>
+            <a asp-controller="Ads" asp-action="Index" class="btn btn-outline-primary btn-sm">View All <i class="bi bi-arrow-right"></i></a>
+        </div>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+            @foreach (var ad in featuredAds)
             {
-                <div class="col-auto mb-2">
-                    <a asp-controller="Ads" asp-action="Index" asp-route-categoryId="@category.Id" class="btn btn-outline-primary">
-                        @category.Name
+                <div class="col">
+                    <a asp-controller="Ads" asp-action="Details" asp-route-id="@ad.Id" class="text-decoration-none">
+                        <div class="card h-100 shadow-sm feature-card">
+                            <div class="position-relative">
+                                <img src="@(ad.MainImageUrl ?? "/images/no-image.png")" 
+                                     class="card-img-top" alt="@ad.Title" 
+                                     style="height: 180px; object-fit: cover;">
+                                <div class="featured-badge position-absolute top-0 start-0 m-2">
+                                    <i class="bi bi-star-fill me-1"></i>Featured
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h6 class="card-title text-success fw-bold mb-1">₹@ad.Price.ToString("N0")</h6>
+                                <p class="card-text text-dark small text-truncate">@ad.Title</p>
+                                <small class="text-muted"><i class="bi bi-geo-alt"></i> @(ad.CityName ?? "N/A")</small>
+                            </div>
+                        </div>
                     </a>
                 </div>
             }
@@ -30,42 +46,154 @@
     </div>
 }
 
-<div class="container">
-    <h2 class="mb-3">Latest Ads</h2>
-    
-    <div class="row">
-        @foreach (var ad in Model)
-        {
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    @if (!string.IsNullOrEmpty(ad.MainImageUrl))
-                    {
-                        <img src="@ad.MainImageUrl" class="card-img-top" alt="@ad.Title" style="height: 180px; object-fit: cover;">
-                    }
-                    else
-                    {
-                        <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 180px;">
-                            <span class="text-white">No Image</span>
+<!-- Categories Section -->
+@if (categories != null && categories.Any())
+{
+    <div class="container mb-5">
+        <h3 class="fw-bold mb-3"><i class="bi bi-grid me-2"></i>Browse by Category</h3>
+        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-5 g-3">
+            @foreach (var category in categories.Take(10))
+            {
+                <div class="col">
+                    <a asp-controller="Ads" asp-action="Index" asp-route-categoryId="@category.Id" 
+                       class="text-decoration-none">
+                        <div class="card h-100 text-center category-card shadow-sm">
+                            <div class="card-body d-flex flex-column justify-content-center align-items-center py-3">
+                                <i class="bi @category.IconUrl fs-3 text-primary mb-2"></i>
+                                <h6 class="card-title mb-0 text-dark">@category.Name</h6>
+                            </div>
                         </div>
-                    }
-                    <div class="card-body">
-                        <h5 class="card-title text-truncate">@ad.Title</h5>
-                        <p class="card-text text-truncate">@ad.Description</p>
-                        <h6 class="text-primary">$@ad.Price.ToString("N2")</h6>
-                        <p class="text-muted"><small>@ad.CategoryName</small></p>
-                    </div>
-                    <div class="card-footer">
-                        <a asp-controller="Ads" asp-action="Details" asp-route-id="@ad.Id" class="btn btn-sm btn-primary">View Details</a>
-                    </div>
+                    </a>
                 </div>
-            </div>
-        }
+            }
+        </div>
+        <div class="text-center mt-3">
+            <a asp-controller="Ads" asp-action="Index" class="btn btn-outline-secondary">View All Categories</a>
+        </div>
+    </div>
+}
+
+<!-- Latest Ads Section -->
+<div class="container mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="fw-bold"><i class="bi bi-clock-history me-2"></i>Fresh Recommendations</h3>
+        <a asp-controller="Ads" asp-action="Index" class="btn btn-outline-primary btn-sm">View All <i class="bi bi-arrow-right"></i></a>
     </div>
     
-    @if (!Model.Any())
+    @if (latestAds.Any())
     {
-        <div class="alert alert-info">
-            No ads available at the moment. Check back later!
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+            @foreach (var ad in latestAds)
+            {
+                <div class="col">
+                    <a asp-controller="Ads" asp-action="Details" asp-route-id="@ad.Id" class="text-decoration-none">
+                        <div class="card h-100 shadow-sm ad-card">
+                            <div class="position-relative">
+                                @if (!string.IsNullOrEmpty(ad.MainImageUrl))
+                                {
+                                    <img src="@ad.MainImageUrl" class="card-img-top" alt="@ad.Title" style="height: 180px; object-fit: cover;">
+                                }
+                                else
+                                {
+                                    <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 180px;">
+                                        <span class="text-white"><i class="bi bi-image fs-1"></i></span>
+                                    </div>
+                                }
+                                <!-- Favorite Button -->
+                                <button type="button" class="btn-favorite position-absolute" 
+                                        style="top: 10px; right: 10px; z-index: 20; background: white; border: none; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.2);"
+                                        onclick="event.preventDefault(); event.stopPropagation();">
+                                    <i class="bi bi-heart text-danger"></i>
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <h6 class="card-title text-success fw-bold mb-1">₹@ad.Price.ToString("N0")</h6>
+                                <p class="card-text text-dark small text-truncate">@ad.Title</p>
+                                <small class="text-muted d-block"><i class="bi bi-geo-alt"></i> @(ad.CityName ?? "N/A")</small>
+                                <small class="text-muted">@ad.CreatedAt.ToString("MMM dd, yyyy")</small>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5 bg-light rounded">
+            <i class="bi bi-inbox fs-1 text-muted mb-3"></i>
+            <h5 class="text-muted">No ads available yet</h5>
+            <p class="text-muted">Be the first to post an ad!</p>
+            <a asp-controller="Ads" asp-action="Create" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-2"></i>Post Your First Ad
+            </a>
         </div>
     }
 </div>
+
+<!-- Call to Action -->
+<div class="container mb-5">
+    <div class="card bg-primary text-white rounded-4 overflow-hidden">
+        <div class="card-body p-5 text-center">
+            <h2 class="fw-bold mb-3">Start Selling Today!</h2>
+            <p class="mb-4">Reach thousands of potential buyers in your area. Post your ad in seconds.</p>
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <a asp-controller="Ads" asp-action="Create" class="btn btn-light btn-lg px-5">
+                    <i class="bi bi-plus-circle me-2"></i>Post Free Ad
+                </a>
+            }
+            else
+            {
+                <a asp-controller="Account" asp-action="Register" class="btn btn-light btn-lg px-5 me-2">
+                    <i class="bi bi-person-plus me-2"></i>Sign Up Free
+                </a>
+                <a asp-controller="Ads" asp-action="Index" class="btn btn-outline-light btn-lg px-5">
+                    Browse Ads
+                </a>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .feature-card, .ad-card, .category-card {
+        transition: all 0.3s ease;
+    }
+    
+    .feature-card:hover, .ad-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+    
+    .category-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1) !important;
+    }
+    
+    .category-card:hover i {
+        transform: scale(1.1);
+    }
+    
+    .category-card i {
+        transition: transform 0.3s ease;
+    }
+    
+    .featured-badge {
+        background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+        color: #333;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    
+    .btn-favorite {
+        opacity: 0.7;
+        transition: opacity 0.2s;
+    }
+    
+    .btn-favorite:hover {
+        opacity: 1;
+    }
+</style>

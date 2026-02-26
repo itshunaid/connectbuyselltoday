@@ -1,42 +1,77 @@
-﻿<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - ConnectBuySellToday</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
+    <!-- Top Info Bar -->
+    <div class="top-info-bar bg-dark text-white py-1 d-none d-md-block">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <small><i class="bi bi-envelope me-1"></i> support@connectbuysell.com</small>
+                <small><i class="bi bi-phone me-1"></i> Need help? Call us: +91 98765 43210</small>
+            </div>
+        </div>
+    </div>
+
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ConnectBuySellToday</a>
+        <nav class="navbar navbar-expand-lg navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow sticky-top">
+            <div class="container">
+                <a class="navbar-brand fw-bold text-primary" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-bag-heart-fill me-1"></i>ConnectBuySell
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                
+                <!-- Search Bar - Desktop -->
+                <div class="d-none d-lg-block mx-3 flex-grow-1" style="max-width: 400px;">
+                    <form asp-controller="Ads" asp-action="Index" method="get" class="d-flex">
+                        <input type="text" name="searchQuery" class="form-control rounded-pill border-primary" 
+                               placeholder="Search ads..." aria-label="Search" />
+                        <button type="submit" class="btn btn-primary rounded-pill ms-2">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between align-items-center">
+                    <ul class="navbar-nav flex-grow-1 justify-content-center">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark fw-medium" asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-house-door me-1"></i>Home
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Ads" asp-action="Index">Browse Ads</a>
+                            <a class="nav-link text-dark fw-medium" asp-area="" asp-controller="Ads" asp-action="Index">
+                                <i class="bi bi-grid me-1"></i>Browse Ads
+                            </a>
                         </li>
                         @if (User.Identity?.IsAuthenticated == true)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+                                <a class="nav-link text-dark fw-medium" asp-area="" asp-controller="Dashboard" asp-action="Index">
+                                    <i class="bi bi-speedometer2 me-1"></i>Dashboard
+                                </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Ads" asp-action="Create">Post Ad</a>
+                                <a class="nav-link text-dark fw-medium" asp-area="" asp-controller="Ads" asp-action="Create">
+                                    <i class="bi bi-plus-circle me-1"></i>Post Ad
+                                </a>
                             </li>
                         }
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-danger" asp-area="" asp-controller="Admin" asp-action="Index">Admin</a>
+                                <a class="nav-link text-danger fw-medium" asp-area="" asp-controller="Admin" asp-action="Index">
+                                    <i class="bi bi-shield-check me-1"></i>Admin
+                                </a>
                             </li>
                         }
                     </ul>
@@ -45,17 +80,70 @@
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+
+    <div class="container flex-grow-1">
+        <main role="main" class="pb-4">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <!-- Footer -->
+    <footer class="footer bg-dark text-white pt-5 pb-3">
         <div class="container">
-            &copy; 2026 - ConnectBuySellToday - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <h5 class="fw-bold mb-3">
+                        <i class="bi bi-bag-heart-fill me-2 text-primary"></i>ConnectBuySellToday
+                    </h5>
+                    <p class="text-light small">The best place to buy and sell products in your area. Connect with thousands of buyers and sellers near you.</p>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-white social-icon"><i class="bi bi-facebook fs-5"></i></a>
+                        <a href="#" class="text-white social-icon"><i class="bi bi-twitter-x fs-5"></i></a>
+                        <a href="#" class="text-white social-icon"><i class="bi bi-instagram fs-5"></i></a>
+                        <a href="#" class="text-white social-icon"><i class="bi bi-linkedin fs-5"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h6 class="fw-bold mb-3">Quick Links</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a asp-controller="Home" asp-action="Index" class="text-light text-decoration-none footer-link">Home</a></li>
+                        <li class="mb-2"><a asp-controller="Ads" asp-action="Index" class="text-light text-decoration-none footer-link">Browse Ads</a></li>
+                        <li class="mb-2"><a asp-controller="Ads" asp-action="Create" class="text-light text-decoration-none footer-link">Post Ad</a></li>
+                        <li class="mb-2"><a asp-controller="Dashboard" asp-action="Index" class="text-light text-decoration-none footer-link">Dashboard</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h6 class="fw-bold mb-3">Categories</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-light text-decoration-none footer-link">Cars</a></li>
+                        <li class="mb-2"><a href="#" class="text-light text-decoration-none footer-link">Mobiles</a></li>
+                        <li class="mb-2"><a href="#" class="text-light text-decoration-none footer-link">Electronics</a></li>
+                        <li class="mb-2"><a href="#" class="text-light text-decoration-none footer-link">Furniture</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <h6 class="fw-bold mb-3">Contact Us</h6>
+                    <ul class="list-unstyled text-light">
+                        <li class="mb-2"><i class="bi bi-geo-alt me-2 text-primary"></i>123 Market Street, Mumbai, India</li>
+                        <li class="mb-2"><i class="bi bi-envelope me-2 text-primary"></i>support@connectbuysell.com</li>
+                        <li class="mb-2"><i class="bi bi-phone me-2 text-primary"></i>+91 98765 43210</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4 border-secondary">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <small class="text-light">&copy; 2026 ConnectBuySellToday. All rights reserved.</small>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <a asp-controller="Home" asp-action="Privacy" class="text-light text-decoration-none small footer-link">Privacy Policy</a>
+                    <span class="text-light mx-2">|</span>
+                    <a href="#" class="text-light text-decoration-none small footer-link">Terms of Service</a>
+                </div>
+            </div>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

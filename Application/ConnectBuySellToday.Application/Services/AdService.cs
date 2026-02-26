@@ -1,4 +1,4 @@
-﻿using ConnectBuySellToday.Application.DTOs;
+﻿﻿using ConnectBuySellToday.Application.DTOs;
 using ConnectBuySellToday.Application.Interfaces;
 using ConnectBuySellToday.Domain.Common;
 using ConnectBuySellToday.Domain.Entities;
@@ -334,5 +334,31 @@ public class AdService : IAdService
     {
         // Reuse the existing method
         return await GetAdsByUserIdAsync(sellerId);
+    }
+
+    public async Task<bool> FeatureAdAsync(Guid adId, bool isFeatured, DateTime? expiryDate)
+    {
+        var ad = await _unitOfWork.Ads.GetByIdAsync(adId);
+        
+        if (ad == null)
+            return false;
+
+        // Validation: If featuring an ad, expiry date must be provided and in the future
+        if (isFeatured)
+        {
+            if (!expiryDate.HasValue)
+                throw new ArgumentException("Expiry date is required when featuring an ad");
+            
+            if (expiryDate.Value <= DateTime.UtcNow)
+                throw new ArgumentException("Expiry date must be in the future");
+        }
+
+        ad.IsFeatured = isFeatured;
+        ad.FeaturedExpiryDate = isFeatured ? expiryDate : null;
+
+        _unitOfWork.Ads.Update(ad);
+        var result = await _unitOfWork.CompleteAsync();
+
+        return result > 0;
     }
 }

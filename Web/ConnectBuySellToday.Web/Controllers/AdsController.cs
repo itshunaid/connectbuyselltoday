@@ -45,7 +45,7 @@ return View();
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(AdDto adDto, IFormFile? ImageFile)
+    public async Task<IActionResult> Create(AdDto adDto, List<IFormFile>? ImageFiles)
     {
         if (!ModelState.IsValid)
         {
@@ -61,11 +61,11 @@ return View();
             return RedirectToAction("Login", "Account");
         }
 
-        // Handle file upload
+        // Handle multiple file uploads - filter out empty files
         IEnumerable<IFormFile>? images = null;
-        if (ImageFile != null && ImageFile.Length > 0)
+        if (ImageFiles != null && ImageFiles.Count > 0)
         {
-            images = new List<IFormFile> { ImageFile };
+            images = ImageFiles.Where(f => f != null && f.Length > 0).ToList();
         }
 
         var success = await _adService.CreateAdAsync(adDto, sellerId, images);
@@ -80,6 +80,7 @@ return View();
         ViewBag.Categories = allCategories;
         return View(adDto);
     }
+
 
     [AllowAnonymous]
     public async Task<IActionResult> Details(Guid id)

@@ -4,81 +4,166 @@
     ViewData["Title"] = "Admin Dashboard";
 }
 
-<div class="container">
-    <h1>Admin Dashboard</h1>
+<div class="container py-4">
+    <h1 class="fw-bold mb-4"><i class="bi bi-speedometer2 me-2"></i>Admin Dashboard</h1>
     
-    <div class="row mt-4">
-        <div class="col-md-3">
-            <div class="card text-white bg-primary mb-3">
+    <!-- Stats Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
-                    <h5 class="card-title">Total Users</h5>
-                    <p class="card-text display-4">@Model.TotalUsers</p>
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="text-muted mb-1">Total Users</p>
+                            <h2 class="fw-bold text-primary mb-0">@Model.TotalUsers</h2>
+                        </div>
+                        <div class="stat-icon bg-primary bg-opacity-10 rounded-circle p-3">
+                            <i class="bi bi-people fs-4 text-primary"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card text-white bg-success mb-3">
+        <div class="col-md-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
-                    <h5 class="card-title">Active Users</h5>
-                    <p class="card-text display-4">@Model.ActiveUsers</p>
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="text-muted mb-1">Active Users</p>
+                            <h2 class="fw-bold text-success mb-0">@Model.ActiveUsers</h2>
+                        </div>
+                        <div class="stat-icon bg-success bg-opacity-10 rounded-circle p-3">
+                            <i class="bi bi-person-check fs-4 text-success"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card text-white bg-danger mb-3">
+        <div class="col-md-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
-                    <h5 class="card-title">Banned Users</h5>
-                    <p class="card-text display-4">@Model.BannedUsers</p>
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="text-muted mb-1">Banned Users</p>
+                            <h2 class="fw-bold text-danger mb-0">@Model.BannedUsers</h2>
+                        </div>
+                        <div class="stat-icon bg-danger bg-opacity-10 rounded-circle p-3">
+                            <i class="bi bi-person-x fs-4 text-danger"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card text-white bg-warning mb-3">
+        <div class="col-md-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
-                    <h5 class="card-title">Pending Ads</h5>
-                    <p class="card-text display-4">@Model.PendingAds</p>
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="text-muted mb-1">Pending Ads</p>
+                            <h2 class="fw-bold text-warning mb-0">@Model.PendingAds</h2>
+                        </div>
+                        <div class="stat-icon bg-warning bg-opacity-10 rounded-circle p-3">
+                            <i class="bi bi-hourglass-split fs-4 text-warning"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row mt-4">
+    <!-- Additional Stats -->
+    <div class="row g-4 mb-4">
         <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Total Ads</h5>
-                    <p class="card-text display-6">@Model.TotalAds</p>
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-box-seam fs-1 text-primary mb-3"></i>
+                    <h4 class="fw-bold">@Model.TotalAds</h4>
+                    <p class="text-muted mb-0">Total Ads</p>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Active Ads</h5>
-                    <p class="card-text display-6">@Model.ActiveAds</p>
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-check-circle fs-1 text-success mb-3"></i>
+                    <h4 class="fw-bold">@Model.ActiveAds</h4>
+                    <p class="text-muted mb-0">Active Ads</p>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Sold Ads</h5>
-                    <p class="card-text display-6">@Model.SoldAds</p>
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-bag-check fs-1 text-info mb-3"></i>
+                    <h4 class="fw-bold">@Model.SoldAds</h4>
+                    <p class="text-muted mb-0">Sold Ads</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row mt-4">
+    <!-- Action Buttons -->
+    <div class="row g-4">
         <div class="col-md-6">
-            <a asp-controller="Admin" asp-action="PendingAds" class="btn btn-warning btn-lg btn-block">
-                Review Pending Ads (@Model.PendingAds)
+            <a asp-controller="Admin" asp-action="PendingAds" class="text-decoration-none">
+                <div class="card border-0 shadow-sm action-card h-100">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="flex-shrink-0 me-3">
+                            <div class="action-icon bg-warning bg-opacity-10 rounded-circle p-4">
+                                <i class="bi bi-hourglass-split fs-2 text-warning"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-1">Pending Ads</h5>
+                            <p class="text-muted mb-0">Review and approve ads waiting for moderation</p>
+                            <span class="badge bg-warning text-dark mt-2">@Model.PendingAds pending</span>
+                        </div>
+                    </div>
+                </div>
             </a>
         </div>
         <div class="col-md-6">
-            <a asp-controller="Admin" asp-action="Users" class="btn btn-primary btn-lg btn-block">
-                Manage Users
+            <a asp-controller="Admin" asp-action="Users" class="text-decoration-none">
+                <div class="card border-0 shadow-sm action-card h-100">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="flex-shrink-0 me-3">
+                            <div class="action-icon bg-primary bg-opacity-10 rounded-circle p-4">
+                                <i class="bi bi-people fs-2 text-primary"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-1">Manage Users</h5>
+                            <p class="text-muted mb-0">View and manage user accounts and permissions</p>
+                        </div>
+                    </div>
+                </div>
             </a>
         </div>
     </div>
 </div>
+
+<style>
+    .stat-icon {
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .action-card {
+        transition: all 0.3s ease;
+    }
+    
+    .action-card:hover {
+        transform: translateX(5px);
+    }
+    
+    .action-icon {
+        width: 70px;
+        height: 70px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>

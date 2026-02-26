@@ -56,31 +56,42 @@
     }
     else
     {
-        <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
             @foreach (var ad in Model)
             {
                 <div class="col">
                     <a asp-action="Details" asp-route-id="@ad.Id" class="text-decoration-none">
                         <div class="card h-100 shadow-sm hover-shadow transition position-relative">
-                            @if (ad.IsFeatured)
+                            <!-- Heart Icon - Add to Favorites (Top Right) -->
+                            <button type="button" class="btn-favorite position-absolute" 
+                                    style="top: 10px; right: 10px; z-index: 20; background: white; border: none; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.2);" 
+                                    onclick="event.preventDefault(); event.stopPropagation(); toggleFavorite('@ad.Id')">
+                                <i class="bi bi-heart text-danger"></i>
+                            </button>
+                            
+                            @if (ad.IsFeatured && ad.FeaturedExpiryDate > DateTime.UtcNow)
                             {
                                 <div class="featured-badge">
                                     <i class="bi bi-star-fill"></i> Featured
+                                    <span class="featured-expiry">until @ad.FeaturedExpiryDate?.ToString("MMM dd")</span>
                                 </div>
                             }
                             <img src="@(ad.MainImageUrl ?? "/images/no-image.png")"
                                  class="card-img-top" alt="@ad.Title"
-                                 style="height: 180px; object-fit: cover;">
+                                 style="height: 200px; object-fit: cover;">
 
                             <div class="card-body">
-                                <h5 class="card-title text-success fw-bold"> @ad.Price.ToString("N0")</h5>
-                                <p class="card-text text-truncate mb-1 text-dark">@ad.Title</p>
-                                <p class="text-muted small">@ad.CategoryName</p>
+                                <h5 class="card-title text-success fw-bold">@ad.Price.ToString("N0")</h5>
+                                <p class="card-text text-truncate text-dark" style="max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">@ad.Title</p>
                             </div>
 
-                            <div class="card-footer bg-white border-top-0 d-flex justify-content-between">
-                                <small class="text-muted">Today</small>
-                                <i class="bi bi-heart"></i>
+                            <div class="card-footer bg-white border-top-0">
+                                <small class="text-muted d-block">
+                                    <i class="bi bi-geo-alt"></i> @(ad.CityName ?? "Unknown Location")
+                                </small>
+                                <small class="text-muted">
+                                    @ad.CreatedAt.ToString("MMM dd, yyyy")
+                                </small>
                             </div>
                         </div>
                     </a>
@@ -105,7 +116,7 @@
         left: 10px;
         background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
         color: #333;
-        padding: 5px 12px;
+        padding: 6px 14px;
         border-radius: 20px;
         font-size: 0.75rem;
         font-weight: 600;
@@ -114,8 +125,26 @@
         display: flex;
         align-items: center;
         gap: 4px;
+        animation: pulse 2s infinite;
     }
     .featured-badge i {
         color: #b8860b;
+    }
+    .featured-expiry {
+        font-size: 0.65rem;
+        opacity: 0.9;
+        margin-left: 4px;
+        font-weight: 500;
+    }
+    @@keyframes pulse {
+        0% {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        50% {
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.6);
+        }
+        100% {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
     }
 </style>

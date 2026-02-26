@@ -1,4 +1,4 @@
-﻿using ConnectBuySellToday.Application.DTOs;
+﻿﻿using ConnectBuySellToday.Application.DTOs;
 using Microsoft.AspNetCore.Http;
 
 namespace ConnectBuySellToday.Application.Interfaces;
@@ -17,4 +17,7 @@ public interface IAdService
     Task<bool> SetMainImageAsync(Guid adId, Guid imageId, string sellerId);
     Task<IEnumerable<AdDto>> GetAdsByUserIdAsync(string userId);
     Task<IEnumerable<AdDto>> GetAdsBySellerIdAsync(string sellerId);
+    
+    // Featured ads management
+    Task<bool> FeatureAdAsync(Guid adId, bool isFeatured, DateTime? expiryDate);
 }

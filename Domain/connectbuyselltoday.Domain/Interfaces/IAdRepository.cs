@@ -1,4 +1,4 @@
-﻿using ConnectBuySellToday.Domain.Entities;
+﻿﻿using ConnectBuySellToday.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,5 +29,9 @@ public interface IAdRepository : IGenericRepository<ProductAd>
 
     // Favorite methods
     Task<IEnumerable<ProductAd>> GetFavoriteAdsByUserIdAsync(string userId);
+    
+    // Featured ads methods
+    Task<IEnumerable<ProductAd>> GetActiveFeaturedAdsAsync(int count);
 }
+
 }

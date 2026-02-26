@@ -1,4 +1,4 @@
-﻿﻿using ConnectBuySellToday.Domain.Enums;
+﻿﻿﻿﻿using ConnectBuySellToday.Domain.Enums;
 using Microsoft.AspNetCore.Http;
 
 namespace ConnectBuySellToday.Application.DTOs;
@@ -28,4 +28,7 @@ public class AdDto
     
     // For file upload
     public IFormFile? ImageFile { get; set; }
+    
+    // For multiple image uploads
+    public List<IFormFile>? ImageFiles { get; set; }
 }

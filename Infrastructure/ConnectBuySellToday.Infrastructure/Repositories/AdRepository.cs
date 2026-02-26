@@ -17,12 +17,17 @@ public class AdRepository : GenericRepository<ProductAd>, IAdRepository
 
     public async Task<IEnumerable<ProductAd>> GetAdsByCategoryAsync(Guid categoryId)
     {
+        var now = DateTime.UtcNow;
+        
         return await _context.ProductAds
             .Where(x => x.CategoryId == categoryId)
+            .OrderByDescending(x => x.IsFeatured && x.FeaturedExpiryDate.HasValue && x.FeaturedExpiryDate > now ? 1 : 0)
+            .ThenByDescending(x => x.CreatedAt)
             .Include(x => x.Category)
             .Include(x => x.Images)
             .ToListAsync();
     }
+
 
     public async Task<IEnumerable<ProductAd>> SearchAdsAsync(string searchTerm)
     {
@@ -39,8 +44,8 @@ public class AdRepository : GenericRepository<ProductAd>, IAdRepository
         
         return await _context.ProductAds
             .Where(x => x.Status == Domain.Enums.AdStatus.Active)
-            .OrderByDescending(x => x.IsFeatured && x.FeaturedExpiryDate > now)  // Featured ads first (active featured)
-            .ThenByDescending(x => x.CreatedAt)  // Then by most recent
+            .OrderByDescending(x => x.IsFeatured && x.FeaturedExpiryDate.HasValue && x.FeaturedExpiryDate > now ? 1 : 0)
+            .ThenByDescending(x => x.CreatedAt)
             .Take(count)
             .Include(x => x.Category)
             .Include(x => x.Images)
@@ -99,8 +104,29 @@ public class AdRepository : GenericRepository<ProductAd>, IAdRepository
                 )) <= radius);
         }
 
-        return await query.OrderByDescending(x => x.CreatedAt).ToListAsync();
+        var now = DateTime.UtcNow;
+        
+        return await query
+            .OrderByDescending(x => x.IsFeatured && x.FeaturedExpiryDate.HasValue && x.FeaturedExpiryDate > now ? 1 : 0)
+            .ThenByDescending(x => x.CreatedAt)
+            .ToListAsync();
     }
+
+    public async Task<IEnumerable<ProductAd>> GetActiveFeaturedAdsAsync(int count)
+    {
+        var now = DateTime.UtcNow;
+        
+        return await _context.ProductAds
+            .Where(x => x.Status == Domain.Enums.AdStatus.Active)
+            .Where(x => x.IsFeatured && x.FeaturedExpiryDate.HasValue && x.FeaturedExpiryDate > now)
+            .OrderByDescending(x => x.FeaturedExpiryDate)
+            .ThenByDescending(x => x.CreatedAt)
+            .Take(count)
+            .Include(x => x.Category)
+            .Include(x => x.Images)
+            .ToListAsync();
+    }
+
 
     public async Task<IEnumerable<ProductAd>> GetAdsByUserIdAsync(string userId)
     {

@@ -6,57 +6,209 @@
 
 <div class="container mt-4">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-lg-8">
             <div class="card shadow">
                 <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">Post Your Ad</h4>
+                    <h4 class="mb-0"><i class="bi bi-plus-circle me-2"></i>Post Your Ad</h4>
                 </div>
                 <div class="card-body">
-                    <form asp-action="Create" method="post" enctype="multipart/form-data">
+                    <!-- Progress Bar -->
+                    <div class="mb-4">
+                        <div class="progress" style="height: 25px;">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                                 role="progressbar" id="progressBar" style="width: 25%">
+                                <span class="progress-text">Step 1 of 4</span>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-2">
+                            <span class="step-label active" id="step1Label">Category</span>
+                            <span class="step-label" id="step2Label">Details</span>
+                            <span class="step-label" id="step3Label">Images</span>
+                            <span class="step-label" id="step4Label">Location</span>
+                        </div>
+                    </div>
+
+                    <form asp-action="Create" method="post" enctype="multipart/form-data" id="postAdForm">
                         <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
-                        <div class="mb-3">
-                            <label asp-for="Title" class="form-label">Title</label>
-                            <input asp-for="Title" class="form-control" placeholder="What are you selling?" />
-                            <span asp-validation-for="Title" class="text-danger"></span>
-                        </div>
+                        <!-- Step 1: Category Selection -->
+                        <div class="step-content" id="step1">
+                            <h5 class="mb-3"><i class="bi bi-grid me-2"></i>Select Category</h5>
+                            <div class="mb-3">
+                                <label asp-for="CategoryId" class="form-label fw-bold">Category <span class="text-danger">*</span></label>
+                                <select asp-for="CategoryId" class="form-select form-select-lg" id="categorySelect"
+                                        data-val="true"
+                                        data-val-required="Please select a category">
+                                    <option value="">-- Select a Category --</option>
+                                    @if (ViewBag.Categories != null)
+                                    {
+                                        @foreach (var category in ViewBag.Categories)
+                                        {
+                                            <option value="@category.Id">@category.Name</option>
+                                        }
+                                    }
+                                </select>
+                                <span asp-validation-for="CategoryId" class="text-danger field-validation-valid" data-valmsg-for="CategoryId" data-valmsg-replace="true"></span>
+                                <div class="form-text">Choose the most relevant category for your item</div>
+                            </div>
 
-                        <div class="mb-3">
-                            <label asp-for="Description" class="form-label">Description</label>
-                            <textarea asp-for="Description" class="form-control" rows="4" placeholder="Describe your item..."></textarea>
-                            <span asp-validation-for="Description" class="text-danger"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Price" class="form-label">Price (₹)</label>
-                            <input asp-for="Price" type="number" class="form-control" placeholder="Enter price" />
-                            <span asp-validation-for="Price" class="text-danger"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="CategoryId" class="form-label">Category</label>
-                            <select asp-for="CategoryId" class="form-select">
-                                <option value="">Select a category</option>
+                            
+                            <!-- Category Icons Grid -->
+                            <div class="row g-3 mt-3">
                                 @if (ViewBag.Categories != null)
                                 {
                                     @foreach (var category in ViewBag.Categories)
                                     {
-                                        <option value="@category.Id">@category.Name</option>
+                                        <div class="col-6 col-md-4">
+                                            <div class="category-card p-3 border rounded text-center cursor-pointer" 
+                                                 data-category-id="@category.Id" onclick="selectCategory('@category.Id')">
+                                                <i class="bi bi-tag fs-3 text-primary"></i>
+                                                <p class="mb-0 mt-2">@category.Name</p>
+                                            </div>
+                                        </div>
                                     }
                                 }
-                            </select>
-                            <span asp-validation-for="CategoryId" class="text-danger"></span>
+                            </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Upload Product Image</label>
-                            <input type="file" name="ImageFile" class="form-control" accept="image/*" />
-                            <small class="text-muted">Supported formats: JPG, PNG, GIF, WebP (Max 5MB)</small>
+                        <!-- Step 2: Ad Details -->
+                        <div class="step-content" id="step2" style="display: none;">
+                            <h5 class="mb-3"><i class="bi bi-card-text me-2"></i>Ad Details</h5>
+                            
+                            <div class="mb-3">
+                                <label asp-for="Title" class="form-label fw-bold">Title <span class="text-danger">*</span></label>
+                                <input asp-for="Title" class="form-control form-control-lg" 
+                                       placeholder="Enter a descriptive title (min 10 characters)" 
+                                       maxlength="100" id="adTitle" 
+                                       data-val="true"
+                                       data-val-required="Please enter a title for your ad"
+                                       data-val-minlength="Title must be at least 10 characters long"
+                                       data-val-minlength-min="10"
+                                       data-val-maxlength="Title cannot exceed 100 characters"
+                                       data-val-maxlength-max="100" />
+                                <span asp-validation-for="Title" class="text-danger field-validation-valid" data-valmsg-for="Title" data-valmsg-replace="true"></span>
+
+                                <div class="form-text">Be specific! E.g., "iPhone 14 Pro Max 256GB - Like New"</div>
+                                <div class="mt-1">
+                                    <small class="text-muted">Characters: <span id="titleCharCount">0</span>/100 (minimum 10)</small>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Price" class="form-label fw-bold">Price (₹) <span class="text-danger">*</span></label>
+                                <div class="input-group input-group-lg">
+                                    <span class="input-group-text">₹</span>
+                                    <input asp-for="Price" type="number" class="form-control" 
+                                           placeholder="0.00" step="0.01" id="adPrice"
+                                           data-val="true"
+                                           data-val-required="Please enter a price"
+                                           data-val-number="Please enter a valid number"
+                                           data-val-range="Price must be greater than 0"
+                                           data-val-range-min="0.01"
+                                           data-val-range-max="999999999.99" />
+                                </div>
+                                <span asp-validation-for="Price" class="text-danger field-validation-valid" data-valmsg-for="Price" data-valmsg-replace="true"></span>
+
+                                <div class="form-text">Enter a competitive price to attract more buyers</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Description" class="form-label fw-bold">Description</label>
+                                <textarea asp-for="Description" class="form-control" rows="6" 
+                                          placeholder="Describe your item in detail. Include condition, brand, model, features, reason for selling, etc."></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                                <div class="form-text">A detailed description helps sell faster!</div>
+                            </div>
                         </div>
 
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary btn-lg">Post Now</button>
-                            <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                        <!-- Step 3: Image Upload -->
+                        <div class="step-content" id="step3" style="display: none;">
+                            <h5 class="mb-3"><i class="bi bi-camera me-2"></i>Upload Images</h5>
+                            
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Product Images</label>
+                                <div class="drop-zone p-5 text-center border-2 border-dashed rounded bg-light" id="dropZone">
+                                    <i class="bi bi-cloud-arrow-up fs-1 text-primary"></i>
+                                    <p class="mb-2 mt-2">Drag and drop images here or click to browse</p>
+                                    <p class="text-muted small">Supported formats: JPG, PNG, GIF, WebP (Max 5MB each)</p>
+                                    <input type="file" name="ImageFiles" class="form-control" 
+                                           id="fileInput" accept="image/*" multiple hidden />
+
+                                    <button type="button" class="btn btn-outline-primary mt-2" onclick="document.getElementById('fileInput').click()">
+                                        <i class="bi bi-folder2-open me-1"></i>Browse Files
+                                    </button>
+                                </div>
+                                <div class="form-text">Add up to 5 images. First image will be the main photo.</div>
+                            </div>
+
+                            <!-- Image Previews -->
+                            <div class="mb-3" id="previewContainer" style="display: none;">
+                                <label class="form-label fw-bold">Image Preview</label>
+                                <div class="row g-2" id="previewRow">
+                                    <!-- Preview thumbnails will be inserted here -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 4: Location & Contact -->
+                        <div class="step-content" id="step4" style="display: none;">
+                            <h5 class="mb-3"><i class="bi bi-geo-alt me-2"></i>Location & Contact</h5>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="CityName" class="form-label fw-bold">City <span class="text-danger">*</span></label>
+                                    <input asp-for="CityName" class="form-control" 
+                                           placeholder="e.g., Mumbai, Delhi, Bangalore"
+                                           data-val="true"
+                                           data-val-required="Please enter your city" />
+                                    <span asp-validation-for="CityName" class="text-danger field-validation-valid" data-valmsg-for="CityName" data-valmsg-replace="true"></span>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">State</label>
+                                    <input name="State" class="form-control" 
+                                           placeholder="e.g., Maharashtra, Karnataka" />
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Full Address</label>
+                                <textarea name="Address" class="form-control" rows="2" 
+                                          placeholder="Complete address (optional)"></textarea>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="PhoneNumber" class="form-label fw-bold">Phone Number <span class="text-danger">*</span></label>
+                                    <input type="tel" id="PhoneNumber" name="PhoneNumber" class="form-control" 
+                                           placeholder="10-digit mobile number" maxlength="10"
+                                           data-val="true"
+                                           data-val-required="Please enter your phone number"
+                                           data-val-regex="Please enter a valid 10-digit phone number"
+                                           data-val-regex-pattern="^[0-9]{10}$" />
+                                    <span class="text-danger field-validation-valid" data-valmsg-for="PhoneNumber" data-valmsg-replace="true"></span>
+                                    <div class="form-text">Buyers will see this number</div>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">Email</label>
+                                    <input type="email" name="Email" class="form-control" 
+                                           placeholder="your@email.com" value="@User.Identity?.Name" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Navigation Buttons -->
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="button" class="btn btn-secondary" id="prevBtn" onclick="changeStep(-1)" disabled>
+                                <i class="bi bi-arrow-left me-1"></i>Previous
+                            </button>
+                            <button type="button" class="btn btn-primary" id="nextBtn" onclick="changeStep(1)">
+                                Next<i class="bi bi-arrow-right ms-1"></i>
+                            </button>
+                            <button type="submit" class="btn btn-success" id="submitBtn" style="display: none;">
+                                <i class="bi bi-check-circle me-1"></i>Post Ad
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -65,6 +217,69 @@
     </div>
 </div>
 
+<style>
+    .step-label {
+        font-size: 0.85rem;
+        color: #6c757d;
+        transition: color 0.3s;
+    }
+    .step-label.active {
+        color: #0d6efd;
+        font-weight: bold;
+    }
+    .category-card {
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    .category-card:hover {
+        background-color: #e7f1ff;
+        border-color: #0d6efd !important;
+        transform: translateY(-2px);
+    }
+    .category-card.selected {
+        background-color: #0d6efd;
+        color: white;
+    }
+    .category-card.selected i {
+        color: white !important;
+    }
+    .border-dashed {
+        border-style: dashed !important;
+    }
+    .drop-zone.dragover {
+        background-color: #e7f1ff;
+        border-color: #0d6efd !important;
+    }
+    .preview-image {
+        width: 100%;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+    .preview-item {
+        position: relative;
+    }
+    .preview-remove {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: #dc3545;
+    }
+    .image-count {
+        font-size: 0.85rem;
+        color: #6c757d;
+    }
+</style>
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/postAd.js"></script>
 }

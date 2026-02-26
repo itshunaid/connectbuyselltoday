@@ -1,0 +1,188 @@
+@model IEnumerable<ConnectBuySellToday.Application.DTOs.CategoryDto>
+
+@{
+    // Default categories if none provided
+    var categories = Model ?? new List<ConnectBuySellToday.Application.DTOs.CategoryDto>();
+    
+    // Static icon mapping for categories (since CategoryDto uses IconUrl for image URL)
+    var categoryIcons = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+    {
+        { "Cars", "bi-car-front-fill" },
+        { "Mobiles", "bi-phone-fill" },
+        { "Jobs", "bi-briefcase-fill" },
+        { "Electronics", "bi-laptop-fill" },
+        { "Furniture", "bi-lamp-fill" },
+        { "Pets", "bi-heart-pulse-fill" },
+        { "Books", "bi-book-fill" },
+        { "Fashion", "bi-person-fill" },
+        { "Sports", "bi-bicycle" },
+        { "Real Estate", "bi-house-fill" }
+    };
+    
+    var defaultCategories = new List<ConnectBuySellToday.Application.DTOs.CategoryDto>
+    {
+        new() { Id = Guid.NewGuid(), Name = "Cars", IconUrl = "bi-car-front-fill" },
+        new() { Id = Guid.NewGuid(), Name = "Mobiles", IconUrl = "bi-phone-fill" },
+        new() { Id = Guid.NewGuid(), Name = "Jobs", IconUrl = "bi-briefcase-fill" },
+        new() { Id = Guid.NewGuid(), Name = "Electronics", IconUrl = "bi-laptop-fill" },
+        new() { Id = Guid.NewGuid(), Name = "Furniture", IconUrl = "bi-lamp-fill" },
+        new() { Id = Guid.NewGuid(), Name = "Pets", IconUrl = "bi-heart-pulse-fill" },
+        new() { Id = Guid.NewGuid(), Name = "Books", IconUrl = "bi-book-fill" },
+        new() { Id = Guid.NewGuid(), Name = "Fashion", IconUrl = "bi-person-fill" },
+        new() { Id = Guid.NewGuid(), Name = "Sports", IconUrl = "bi-bicycle" },
+        new() { Id = Guid.NewGuid(), Name = "Real Estate", IconUrl = "bi-house-fill" }
+    };
+    
+    var displayCategories = categories.Any() ? categories : defaultCategories;
+}
+
+<style>
+    .hero-section {
+        background-color: #f5f5f5;
+        padding: 2rem 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .hero-search-container {
+        max-width: 700px;
+        margin: 0 auto 1.5rem auto;
+    }
+    
+    .hero-search-input {
+        font-size: 1.1rem;
+        padding: 0.75rem 1rem;
+        border: 2px solid #002f34;
+        border-radius: 4px;
+    }
+    
+    .hero-search-input:focus {
+        border-color: #002f34;
+        box-shadow: 0 0 0 3px rgba(0, 47, 52, 0.1);
+    }
+    
+    .hero-search-btn {
+        background-color: #002f34;
+        border-color: #002f34;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+    }
+    
+    .hero-search-btn:hover {
+        background-color: #004d52;
+        border-color: #004d52;
+        color: white;
+    }
+    
+    .category-scroll-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+        scrollbar-color: #002f34 #f5f5f5;
+        padding-bottom: 0.5rem;
+    }
+    
+    .category-scroll-container::-webkit-scrollbar {
+        height: 6px;
+    }
+    
+    .category-scroll-container::-webkit-scrollbar-track {
+        background: #f5f5f5;
+        border-radius: 3px;
+    }
+    
+    .category-scroll-container::-webkit-scrollbar-thumb {
+        background: #002f34;
+        border-radius: 3px;
+    }
+    
+    .category-list {
+        display: flex;
+        gap: 1rem;
+        padding: 0 0.5rem;
+        list-style: none;
+        margin: 0;
+        min-width: min-content;
+    }
+    
+    .category-item {
+        flex-shrink: 0;
+    }
+    
+    .category-link {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        background: white;
+        border-radius: 8px;
+        text-decoration: none;
+        color: #002f34;
+        transition: all 0.2s ease;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        min-width: 80px;
+    }
+    
+    .category-link:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,47,52,0.15);
+        color: #002f34;
+    }
+    
+    .category-icon {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+        color: #002f34;
+    }
+    
+    .category-label {
+        font-size: 0.85rem;
+        font-weight: 500;
+        white-space: nowrap;
+    }
+</style>
+
+<div class="hero-section">
+    <div class="container">
+        <!-- Search Bar -->
+        <div class="hero-search-container">
+            <form asp-controller="Ads" asp-action="Index" method="get" class="d-flex gap-2">
+                <div class="input-group flex-grow-1">
+                    <span class="input-group-text bg-white border-end-0">
+                        <i class="bi bi-search text-muted"></i>
+                    </span>
+                    <input type="text" 
+                           name="searchQuery" 
+                           class="form-control hero-search-input border-start-0" 
+                           placeholder="Search for cars, mobiles, jobs..." 
+                           aria-label="Search ads" />
+                    <button type="submit" class="btn hero-search-btn">
+                        <i class="bi bi-search"></i>
+                        <span class="d-none d-md-inline">Search</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Categories Horizontal Scroll -->
+        <div class="category-scroll-container">
+            <ul class="category-list">
+                @foreach (var category in displayCategories)
+                {
+                    // Get icon from IconUrl or fallback to mapped icon
+                    var iconClass = !string.IsNullOrEmpty(category.IconUrl) && category.IconUrl.StartsWith("bi-") 
+                        ? category.IconUrl 
+                        : (categoryIcons.TryGetValue(category.Name, out var mappedIcon) ? mappedIcon : "bi-grid-fill");
+                    
+                    <li class="category-item">
+                        <a asp-controller="Ads" asp-action="Index" asp-route-categoryId="@category.Id" 
+                           class="category-link" title="@category.Name">
+                            <i class="bi @iconClass category-icon"></i>
+                            <span class="category-label">@category.Name</span>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>
