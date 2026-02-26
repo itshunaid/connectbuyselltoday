@@ -1,7 +1,26 @@
-/* Base Styles */
+/* ============================================
+   OLX COLOR PALETTE - CSS VARIABLES
+   ============================================ */
+:root {
+    /* Primary Colors */
+    --olx-teal: #002f34;       /* Main text, dark buttons, headers */
+    --olx-yellow: #ffce32;     /* Sell button, highlights */
+    --olx-cyan: #23e5db;       /* Links, secondary accents */
+    
+    /* Neutral Colors */
+    --olx-bg-light: #f2f4f5;   /* Background for the whole site */
+    --olx-border: #ccd5d6;     /* Subtle borders for cards */
+    --olx-text-muted: #406367;  /* Secondary text/Location text */
+    --olx-white: #ffffff;
+}
+
+/* ============================================
+   Base Styles
+   ============================================ */
 html {
   font-size: 14px;
 }
+
 
 @media (min-width: 768px) {
   html {
@@ -23,7 +42,11 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background-color: var(--olx-bg-light);
+  color: var(--olx-teal);
+  font-family: 'Roboto', sans-serif; /* OLX uses Roboto or similar clean sans-serif */
 }
+
 
 /* Footer Styles */
 .footer {
@@ -408,4 +431,184 @@ body {
 /* Input group focus */
 .input-group:focus-within {
     box-shadow: 0 0 0 0.1rem rgba(13, 110, 253, 0.25);
+}
+
+/* ============================================
+   OLX THEME - CUSTOM UTILITY CLASSES
+   ============================================ */
+
+/* OLX Sell Button - Gradient Border Style */
+.btn-olx-sell {
+    background-color: var(--olx-white);
+    border: 5px solid;
+    border-image: linear-gradient(to right, #23e5db, #ffce32, #002f34) 1;
+    color: var(--olx-teal);
+    font-weight: bold;
+    text-transform: uppercase;
+    border-radius: 25px;
+    padding: 8px 24px;
+    transition: all 0.3s ease;
+}
+
+.btn-olx-sell:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 47, 52, 0.2);
+}
+
+/* OLX Price Text Styling */
+.text-olx-price {
+    color: var(--olx-teal);
+    font-size: 1.25rem;
+    font-weight: 800;
+}
+
+/* ============================================
+   OLX THEME - SPECIALIZED SELL BUTTON
+   ============================================ */
+
+.sell-button {
+    background: white;
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    border: 4px solid transparent;
+    background-image: linear-gradient(white, white), 
+                      linear-gradient(to right, #23e5db, #ffce32, #002f34);
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+    text-decoration: none;
+    color: var(--olx-teal);
+    transition: all 0.3s ease;
+}
+
+.sell-button:hover {
+    box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+    transform: translateY(-2px);
+    color: var(--olx-teal);
+}
+
+/* ============================================
+   OLX THEME - CARD STYLES FOR AD LISTINGS
+   ============================================ */
+
+.card-olx {
+    background-color: var(--olx-white);
+    border: 1px solid var(--olx-border);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.card-olx:hover {
+    box-shadow: 0 4px 12px rgba(0, 47, 52, 0.15);
+    border-color: var(--olx-teal);
+}
+
+.card-olx .card-title {
+    color: var(--olx-teal);
+    font-weight: 600;
+}
+
+.card-olx .card-location {
+    color: var(--olx-text-muted);
+    font-size: 0.9rem;
+}
+
+/* ============================================
+   OLX THEME - NAVIGATION ENHANCEMENTS
+   ============================================ */
+
+.navbar-olx {
+    background-color: var(--olx-white);
+    border-bottom: 1px solid var(--olx-border);
+}
+
+.navbar-olx .navbar-brand {
+    color: var(--olx-teal);
+    font-weight: 700;
+}
+
+.navbar-olx .nav-link {
+    color: var(--olx-teal);
+    font-weight: 500;
+}
+
+.navbar-olx .nav-link:hover {
+    color: var(--olx-cyan) !important;
+}
+
+/* ============================================
+   OLX THEME - BUTTON VARIANTS
+   ============================================ */
+
+.btn-olx-primary {
+    background-color: var(--olx-teal);
+    border-color: var(--olx-teal);
+    color: var(--olx-white);
+}
+
+.btn-olx-primary:hover {
+    background-color: #004a52;
+    border-color: #004a52;
+    color: var(--olx-white);
+}
+
+.btn-olx-yellow {
+    background-color: var(--olx-yellow);
+    border-color: var(--olx-yellow);
+    color: var(--olx-teal);
+    font-weight: 600;
+}
+
+.btn-olx-yellow:hover {
+    background-color: #e6b92d;
+    border-color: #e6b92d;
+    color: var(--olx-teal);
+}
+
+/* ============================================
+   OLX THEME - LINK STYLES
+   ============================================ */
+
+a.olx-link {
+    color: var(--olx-cyan);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+a.olx-link:hover {
+    color: var(--olx-teal);
+    text-decoration: underline;
+}
+
+/* ============================================
+   OLX THEME - FORM STYLES
+   ============================================ */
+
+.form-olx .form-control:focus {
+    border-color: var(--olx-cyan);
+    box-shadow: 0 0 0 0.2rem rgba(35, 229, 219, 0.25);
+}
+
+.form-olx .form-label {
+    color: var(--olx-teal);
+    font-weight: 500;
+}
+
+/* ============================================
+   OLX THEME - BADGE STYLES
+   ============================================ */
+
+.badge-olx-featured {
+    background-color: var(--olx-yellow);
+    color: var(--olx-teal);
+    font-weight: 600;
+}
+
+.badge-olx-status {
+    background-color: var(--olx-teal);
+    color: var(--olx-white);
 }
