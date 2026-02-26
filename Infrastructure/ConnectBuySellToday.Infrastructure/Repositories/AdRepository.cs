@@ -1,4 +1,4 @@
-﻿using ConnectBuySellToday.Domain.Entities;
+﻿﻿using ConnectBuySellToday.Domain.Entities;
 using ConnectBuySellToday.Domain.Interfaces;
 using ConnectBuySellToday.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -35,14 +35,18 @@ public class AdRepository : GenericRepository<ProductAd>, IAdRepository
 
     public async Task<IEnumerable<ProductAd>> GetRecentAdsAsync(int count)
     {
+        var now = DateTime.UtcNow;
+        
         return await _context.ProductAds
             .Where(x => x.Status == Domain.Enums.AdStatus.Active)
-            .OrderByDescending(x => x.CreatedAt)
+            .OrderByDescending(x => x.IsFeatured && x.FeaturedExpiryDate > now)  // Featured ads first (active featured)
+            .ThenByDescending(x => x.CreatedAt)  // Then by most recent
             .Take(count)
             .Include(x => x.Category)
             .Include(x => x.Images)
             .ToListAsync();
     }
+
 
     public async Task<IEnumerable<ProductAd>> GetAdsBySellerIdAsync(string sellerId)
     {

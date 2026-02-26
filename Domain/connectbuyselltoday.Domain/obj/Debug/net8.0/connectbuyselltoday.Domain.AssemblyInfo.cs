@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ConnectBuySellToday.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+961ab9a6c7c8d0f6027ae2f43fc6883baee4ec6b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5425dfb87ad13edbeeef8dc64a7a1a5d46e5e517")]
 [assembly: System.Reflection.AssemblyProductAttribute("ConnectBuySellToday.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ConnectBuySellToday.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

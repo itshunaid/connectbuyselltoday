@@ -37,7 +37,9 @@ public class AdService : IAdService
             CreatedAt = a.CreatedAt,
             Latitude = a.Location?.Latitude,
             Longitude = a.Location?.Longitude,
-            CityName = a.Location?.CityName
+            CityName = a.Location?.CityName,
+            IsFeatured = a.IsFeatured,
+            FeaturedExpiryDate = a.FeaturedExpiryDate
         });
     }
 
@@ -61,7 +63,9 @@ public class AdService : IAdService
             CreatedAt = a.CreatedAt,
             Latitude = a.Location?.Latitude,
             Longitude = a.Location?.Longitude,
-            CityName = a.Location?.CityName
+            CityName = a.Location?.CityName,
+            IsFeatured = a.IsFeatured,
+            FeaturedExpiryDate = a.FeaturedExpiryDate
         });
     }
 
@@ -84,7 +88,9 @@ public class AdService : IAdService
             CreatedAt = a.CreatedAt,
             Latitude = a.Location?.Latitude,
             Longitude = a.Location?.Longitude,
-            CityName = a.Location?.CityName
+            CityName = a.Location?.CityName,
+            IsFeatured = a.IsFeatured,
+            FeaturedExpiryDate = a.FeaturedExpiryDate
         });
     }
 
@@ -110,7 +116,9 @@ public class AdService : IAdService
             CreatedAt = ad.CreatedAt,
             Latitude = ad.Location?.Latitude,
             Longitude = ad.Location?.Longitude,
-            CityName = ad.Location?.CityName
+            CityName = ad.Location?.CityName,
+            IsFeatured = ad.IsFeatured,
+            FeaturedExpiryDate = ad.FeaturedExpiryDate
         };
     }
 
@@ -316,7 +324,9 @@ public class AdService : IAdService
             CreatedAt = a.CreatedAt,
             Latitude = a.Location?.Latitude,
             Longitude = a.Location?.Longitude,
-            CityName = a.Location?.CityName
+            CityName = a.Location?.CityName,
+            IsFeatured = a.IsFeatured,
+            FeaturedExpiryDate = a.FeaturedExpiryDate
         });
     }
 

@@ -22,6 +22,10 @@ public class AdDto
     public double? Longitude { get; set; }
     public string? CityName { get; set; }
     
+    // Featured ad properties
+    public bool IsFeatured { get; set; }
+    public DateTime? FeaturedExpiryDate { get; set; }
+    
     // For file upload
     public IFormFile? ImageFile { get; set; }
 }

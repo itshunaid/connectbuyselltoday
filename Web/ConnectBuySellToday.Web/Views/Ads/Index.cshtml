@@ -61,13 +61,19 @@
             {
                 <div class="col">
                     <a asp-action="Details" asp-route-id="@ad.Id" class="text-decoration-none">
-                        <div class="card h-100 shadow-sm hover-shadow transition">
+                        <div class="card h-100 shadow-sm hover-shadow transition position-relative">
+                            @if (ad.IsFeatured)
+                            {
+                                <div class="featured-badge">
+                                    <i class="bi bi-star-fill"></i> Featured
+                                </div>
+                            }
                             <img src="@(ad.MainImageUrl ?? "/images/no-image.png")"
                                  class="card-img-top" alt="@ad.Title"
                                  style="height: 180px; object-fit: cover;">
 
                             <div class="card-body">
-                                <h5 class="card-title text-success fw-bold">₹ @ad.Price.ToString("N0")</h5>
+                                <h5 class="card-title text-success fw-bold"> @ad.Price.ToString("N0")</h5>
                                 <p class="card-text text-truncate mb-1 text-dark">@ad.Title</p>
                                 <p class="text-muted small">@ad.CategoryName</p>
                             </div>
@@ -92,5 +98,24 @@
     }
     .card {
         color: inherit;
+    }
+    .featured-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+        color: #333;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .featured-badge i {
+        color: #b8860b;
     }
 </style>

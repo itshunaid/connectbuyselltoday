@@ -16,6 +16,10 @@ namespace ConnectBuySellToday.Domain.Entities
         public decimal Price { get; set; }
         public AdStatus Status { get; set; } = AdStatus.Active;
 
+        // Featured ad properties
+        public bool IsFeatured { get; set; } = false;
+        public DateTime? FeaturedExpiryDate { get; set; }
+
         // Location value object
         public Location? Location { get; set; }
 
