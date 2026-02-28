@@ -18,6 +18,11 @@ public interface IAdService
     Task<IEnumerable<AdDto>> GetAdsByUserIdAsync(string userId);
     Task<IEnumerable<AdDto>> GetAdsBySellerIdAsync(string sellerId);
     
+    // Favorite management
+    Task<bool> ToggleFavoriteAsync(string userId, Guid adId);
+    Task<bool> IsFavoriteAsync(string userId, Guid adId);
+    Task<IEnumerable<AdDto>> GetFavoriteAdsAsync(string userId);
+    
     // Featured ads management
     Task<bool> FeatureAdAsync(Guid adId, bool isFeatured, DateTime? expiryDate);
 }

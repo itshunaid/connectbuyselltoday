@@ -23,23 +23,7 @@
             @foreach (var ad in featuredAds)
             {
                 <div class="col">
-                    <a asp-controller="Ads" asp-action="Details" asp-route-id="@ad.Id" class="text-decoration-none">
-                        <div class="card h-100 shadow-sm feature-card">
-                            <div class="position-relative">
-                                <img src="@(ad.MainImageUrl ?? "/images/no-image.png")" 
-                                     class="card-img-top" alt="@ad.Title" 
-                                     style="height: 180px; object-fit: cover;">
-                                <div class="featured-badge position-absolute top-0 start-0 m-2">
-                                    <i class="bi bi-star-fill me-1"></i>Featured
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <h6 class="card-title text-success fw-bold mb-1">₹@ad.Price.ToString("N0")</h6>
-                                <p class="card-text text-dark small text-truncate">@ad.Title</p>
-                                <small class="text-muted"><i class="bi bi-geo-alt"></i> @(ad.CityName ?? "N/A")</small>
-                            </div>
-                        </div>
-                    </a>
+                    <partial name="_AdCard" model="ad" />
                 </div>
             }
         </div>
@@ -86,34 +70,7 @@
             @foreach (var ad in latestAds)
             {
                 <div class="col">
-                    <a asp-controller="Ads" asp-action="Details" asp-route-id="@ad.Id" class="text-decoration-none">
-                        <div class="card h-100 shadow-sm ad-card">
-                            <div class="position-relative">
-                                @if (!string.IsNullOrEmpty(ad.MainImageUrl))
-                                {
-                                    <img src="@ad.MainImageUrl" class="card-img-top" alt="@ad.Title" style="height: 180px; object-fit: cover;">
-                                }
-                                else
-                                {
-                                    <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 180px;">
-                                        <span class="text-white"><i class="bi bi-image fs-1"></i></span>
-                                    </div>
-                                }
-                                <!-- Favorite Button -->
-                                <button type="button" class="btn-favorite position-absolute" 
-                                        style="top: 10px; right: 10px; z-index: 20; background: white; border: none; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.2);"
-                                        onclick="event.preventDefault(); event.stopPropagation();">
-                                    <i class="bi bi-heart text-danger"></i>
-                                </button>
-                            </div>
-                            <div class="card-body">
-                                <h6 class="card-title text-success fw-bold mb-1">₹@ad.Price.ToString("N0")</h6>
-                                <p class="card-text text-dark small text-truncate">@ad.Title</p>
-                                <small class="text-muted d-block"><i class="bi bi-geo-alt"></i> @(ad.CityName ?? "N/A")</small>
-                                <small class="text-muted">@ad.CreatedAt.ToString("MMM dd, yyyy")</small>
-                            </div>
-                        </div>
-                    </a>
+                    <partial name="_AdCard" model="ad" />
                 </div>
             }
         </div>

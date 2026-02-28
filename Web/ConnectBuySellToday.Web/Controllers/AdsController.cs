@@ -27,11 +27,17 @@ public class AdsController : Controller
     }
 
     [AllowAnonymous]
-    public async Task<IActionResult> Index(string? searchQuery, Guid? categoryId)
+    public async Task<IActionResult> Index(string? searchQuery, Guid? categoryId, double? userLat, double? userLong, double? radiusInKm)
     {
-        var ads = await _adService.SearchAdsAsync(searchQuery, categoryId);
+        var ads = await _adService.SearchAdsAsync(searchQuery, categoryId, userLat, userLong, radiusInKm);
         var categories = await _categoryService.GetAllCategoriesAsync();
         ViewBag.Categories = categories;
+        
+        // Pass location values back to view for form
+        ViewBag.UserLat = userLat;
+        ViewBag.UserLong = userLong;
+        ViewBag.RadiusInKm = radiusInKm;
+        
         return View(ads);
     }
 
@@ -93,5 +99,49 @@ return View();
         }
         
         return View(ad);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ToggleFavorite(Guid adId)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Json(new { success = false, message = "Please login to add to favorites" });
+        }
+
+        try
+        {
+            var isFavorite = await _adService.ToggleFavoriteAsync(userId, adId);
+            return Json(new { success = true, isFavorite = isFavorite });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error toggling favorite for ad {AdId}", adId);
+            return Json(new { success = false, message = "An error occurred" });
+        }
+    }
+
+    [HttpGet]
+    [AllowAnonymous]
+    public async Task<IActionResult> IsFavorite(Guid adId)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Json(new { isFavorite = false });
+        }
+
+        try
+        {
+            var isFavorite = await _adService.IsFavoriteAsync(userId, adId);
+            return Json(new { isFavorite = isFavorite });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error checking favorite status for ad {AdId}", adId);
+            return Json(new { isFavorite = false });
+        }
     }
 }

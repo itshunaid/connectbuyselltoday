@@ -88,6 +88,39 @@ public class AdminController : Controller
         return View(ads);
     }
 
+    public async Task<IActionResult> ModerationQueue()
+    {
+        var ads = await _adminService.GetModerationQueueAsync();
+        return View(ads);
+    }
+
+    // AJAX endpoint for approving ads
+    [HttpGet]
+    public async Task<IActionResult> ApproveAdAjax(Guid id)
+    {
+        var result = await _adminService.ApproveAdAsync(id);
+        if (result)
+        {
+            await _outputCacheStore.EvictByTagAsync("home", default);
+            return Json(new { success = true, message = "Ad has been approved." });
+        }
+        return Json(new { success = false, message = "Failed to approve ad." });
+    }
+
+    // AJAX endpoint for rejecting ads
+    [HttpPost]
+    public async Task<IActionResult> RejectAdAjax(Guid id, string reason)
+    {
+        var result = await _adminService.RejectAdAsync(id, reason);
+        if (result)
+        {
+            await _outputCacheStore.EvictByTagAsync("home", default);
+            return Json(new { success = true, message = "Ad has been rejected." });
+        }
+        return Json(new { success = false, message = "Failed to reject ad." });
+    }
+
+    // Legacy endpoints for non-AJAX requests
     public async Task<IActionResult> ApproveAd(Guid id)
     {
         var result = await _adminService.ApproveAdAsync(id);

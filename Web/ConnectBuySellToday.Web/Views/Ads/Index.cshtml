@@ -16,7 +16,7 @@
     <div class="card mb-4 shadow-sm">
         <div class="card-body">
             <form asp-action="Index" method="get" class="row g-3">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="input-group">
                         <input type="text" name="searchQuery" class="form-control" 
                                placeholder="Search for items..." 
@@ -26,7 +26,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <select name="categoryId" class="form-select" 
                             onchange="this.form.submit()">
                         <option value="">All Categories</option>
@@ -39,10 +39,34 @@
                         }
                     </select>
                 </div>
-                <div class="col-md-2">
-                    <a asp-action="Index" class="btn btn-outline-secondary w-100">Clear</a>
+                <div class="col-md-3">
+                    <div class="input-group">
+                        <input type="number" name="radiusInKm" class="form-control" 
+                               placeholder="Radius (km)" 
+                               value="@ViewBag.RadiusInKm" min="1" max="500" />
+                        <span class="input-group-text">km</span>
+                    </div>
                 </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-outline-primary w-100" onclick="getUserLocation()">
+                        <i class="bi bi-geo-alt"></i> My Location
+                    </button>
+                </div>
+                <!-- Hidden fields for location coordinates -->
+                <input type="hidden" id="userLat" name="userLat" value="@ViewBag.UserLat" />
+                <input type="hidden" id="userLong" name="userLong" value="@ViewBag.UserLong" />
             </form>
+            @if (ViewBag.UserLat != null && ViewBag.UserLong != null)
+            {
+                <div class="mt-2">
+                    <span class="badge bg-success">
+                        <i class="bi bi-geo-alt-fill"></i> Location: @ViewBag.UserLat.ToString("F4"), @ViewBag.UserLong.ToString("F4")
+                    </span>
+                    <a asp-action="Index" asp-route-searchQuery="@Context.Request.Query["searchQuery"]" asp-route-categoryId="@Context.Request.Query["categoryId"]" class="btn btn-sm btn-outline-danger ms-2">
+                        <i class="bi bi-x-circle"></i> Clear Location
+                    </a>
+                </div>
+            }
         </div>
     </div>
 
@@ -60,91 +84,9 @@
             @foreach (var ad in Model)
             {
                 <div class="col">
-                    <a asp-action="Details" asp-route-id="@ad.Id" class="text-decoration-none">
-                        <div class="card h-100 shadow-sm hover-shadow transition position-relative">
-                            <!-- Heart Icon - Add to Favorites (Top Right) -->
-                            <button type="button" class="btn-favorite position-absolute" 
-                                    style="top: 10px; right: 10px; z-index: 20; background: white; border: none; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.2);" 
-                                    onclick="event.preventDefault(); event.stopPropagation(); toggleFavorite('@ad.Id')">
-                                <i class="bi bi-heart text-danger"></i>
-                            </button>
-                            
-                            @if (ad.IsFeatured && ad.FeaturedExpiryDate > DateTime.UtcNow)
-                            {
-                                <div class="featured-badge">
-                                    <i class="bi bi-star-fill"></i> Featured
-                                    <span class="featured-expiry">until @ad.FeaturedExpiryDate?.ToString("MMM dd")</span>
-                                </div>
-                            }
-                            <img src="@(ad.MainImageUrl ?? "/images/no-image.png")"
-                                 class="card-img-top" alt="@ad.Title"
-                                 style="height: 200px; object-fit: cover;">
-
-                            <div class="card-body">
-                                <h5 class="card-title text-success fw-bold">@ad.Price.ToString("N0")</h5>
-                                <p class="card-text text-truncate text-dark" style="max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">@ad.Title</p>
-                            </div>
-
-                            <div class="card-footer bg-white border-top-0">
-                                <small class="text-muted d-block">
-                                    <i class="bi bi-geo-alt"></i> @(ad.CityName ?? "Unknown Location")
-                                </small>
-                                <small class="text-muted">
-                                    @ad.CreatedAt.ToString("MMM dd, yyyy")
-                                </small>
-                            </div>
-                        </div>
-                    </a>
+                    <partial name="_AdCard" model="ad" />
                 </div>
             }
         </div>
     }
 </div>
-
-<style>
-    .hover-shadow:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 1rem 3rem rgba(0,0,0,.175) !important;
-        transition: all 0.3s ease;
-    }
-    .card {
-        color: inherit;
-    }
-    .featured-badge {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-        color: #333;
-        padding: 6px 14px;
-        border-radius: 20px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        z-index: 10;
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        animation: pulse 2s infinite;
-    }
-    .featured-badge i {
-        color: #b8860b;
-    }
-    .featured-expiry {
-        font-size: 0.65rem;
-        opacity: 0.9;
-        margin-left: 4px;
-        font-weight: 500;
-    }
-    @@keyframes pulse {
-        0% {
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-        50% {
-            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.6);
-        }
-        100% {
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-    }
-</style>

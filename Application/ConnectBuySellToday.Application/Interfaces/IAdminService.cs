@@ -14,6 +14,8 @@ public interface IAdminService
     // Ad Management
     Task<IEnumerable<AdDto>> GetPendingAdsAsync();
     Task<IEnumerable<AdDto>> GetAllAdsAsync(AdStatus? status = null);
+    Task<IEnumerable<AdDto>> GetModerationQueueAsync();
+
     Task<bool> ApproveAdAsync(Guid adId);
     Task<bool> RejectAdAsync(Guid adId, string reason);
     Task<bool> HideAdAsync(Guid adId);

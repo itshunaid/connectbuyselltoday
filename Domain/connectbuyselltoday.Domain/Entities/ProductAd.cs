@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,7 +16,11 @@ namespace ConnectBuySellToday.Domain.Entities
         public decimal Price { get; set; }
         public AdStatus Status { get; set; } = AdStatus.Active;
 
+        // Moderation note for rejected ads
+        public string? ModerationNote { get; set; }
+
         // Featured ad properties
+
         public bool IsFeatured { get; set; } = false;
         public DateTime? FeaturedExpiryDate { get; set; }
 

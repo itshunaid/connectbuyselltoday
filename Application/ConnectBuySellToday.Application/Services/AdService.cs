@@ -361,4 +361,55 @@ public class AdService : IAdService
 
         return result > 0;
     }
+
+    public async Task<bool> ToggleFavoriteAsync(string userId, Guid adId)
+    {
+        // Check if already favorited
+        var existingFavorite = await _unitOfWork.Favorites.IsFavoriteAsync(userId, adId);
+        
+        if (existingFavorite)
+        {
+            // Remove from favorites
+            await _unitOfWork.Favorites.RemoveFavoriteAsync(userId, adId);
+            await _unitOfWork.CompleteAsync();
+            return false;
+        }
+        else
+        {
+            // Add to favorites
+            await _unitOfWork.Favorites.AddFavoriteAsync(userId, adId);
+            await _unitOfWork.CompleteAsync();
+            return true;
+        }
+    }
+
+    public async Task<bool> IsFavoriteAsync(string userId, Guid adId)
+    {
+        return await _unitOfWork.Favorites.IsFavoriteAsync(userId, adId);
+    }
+
+    public async Task<IEnumerable<AdDto>> GetFavoriteAdsAsync(string userId)
+    {
+        var ads = await _unitOfWork.Ads.GetFavoriteAdsByUserIdAsync(userId);
+
+        return ads.Select(a => new AdDto
+        {
+            Id = a.Id,
+            Title = a.Title,
+            Description = a.Description,
+            Price = a.Price,
+            Status = a.Status,
+            CategoryId = a.CategoryId,
+            CategoryName = a.Category?.Name ?? "General",
+            SellerId = a.SellerId,
+            MainImageUrl = a.Images.FirstOrDefault(i => i.IsMain)?.Url ?? a.Images.FirstOrDefault()?.Url,
+            ImageUrls = a.Images.Select(i => i.Url).ToList(),
+            CreatedAt = a.CreatedAt,
+            Latitude = a.Location?.Latitude,
+            Longitude = a.Location?.Longitude,
+            CityName = a.Location?.CityName,
+            IsFeatured = a.IsFeatured,
+            FeaturedExpiryDate = a.FeaturedExpiryDate
+        });
+    }
 }

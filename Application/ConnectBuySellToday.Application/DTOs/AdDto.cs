@@ -1,4 +1,4 @@
-﻿﻿﻿﻿using ConnectBuySellToday.Domain.Enums;
+﻿﻿﻿﻿﻿﻿using ConnectBuySellToday.Domain.Enums;
 using Microsoft.AspNetCore.Http;
 
 namespace ConnectBuySellToday.Application.DTOs;
@@ -10,7 +10,9 @@ public class AdDto
     public string Description { get; set; } = string.Empty;
     public decimal Price { get; set; }
     public AdStatus Status { get; set; }
+    public string? ModerationNote { get; set; }
     public Guid CategoryId { get; set; }
+
     public string CategoryName { get; set; } = string.Empty;
     public string SellerId { get; set; } = string.Empty;
     public string SellerName { get; set; } = string.Empty;

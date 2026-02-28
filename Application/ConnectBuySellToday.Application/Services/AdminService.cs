@@ -103,6 +103,13 @@ public class AdminService : IAdminService
         return await MapAdsToDto(ads);
     }
 
+    public async Task<IEnumerable<AdDto>> GetModerationQueueAsync()
+    {
+        var ads = await _unitOfWork.Ads.GetPendingAdsAsync();
+        return await MapAdsToDto(ads);
+    }
+
+
     public async Task<IEnumerable<AdDto>> GetAllAdsAsync(AdStatus? status = null)
     {
         var ads = await _unitOfWork.Ads.GetAllAdsAsync();
@@ -132,9 +139,11 @@ public class AdminService : IAdminService
         if (ad == null) return false;
 
         ad.Status = AdStatus.Rejected;
+        ad.ModerationNote = reason;
         _unitOfWork.Ads.Update(ad);
         
         // Send rejection message to seller via MessageService
+
         var adminUserId = "system"; // Admin user ID
         var rejectionMessage = $"Your ad '{ad.Title}' has been rejected. Reason: {reason}";
         await _messageService.SendMessageAsync(adminUserId, ad.SellerId, adId, rejectionMessage);
@@ -215,7 +224,9 @@ public class AdminService : IAdminService
             Description = a.Description,
             Price = a.Price,
             Status = a.Status,
+            ModerationNote = a.ModerationNote,
             CategoryId = a.CategoryId,
+
             CategoryName = a.Category?.Name ?? "General",
             SellerId = a.SellerId,
             SellerName = sellers.TryGetValue(a.SellerId, out var seller) 
