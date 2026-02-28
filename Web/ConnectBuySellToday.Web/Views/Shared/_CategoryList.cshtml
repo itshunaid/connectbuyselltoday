@@ -1,0 +1,35 @@
+@model IEnumerable<ConnectBuySellToday.Application.DTOs.CategoryDto>
+
+@{
+    // Static icon mapping for categories
+    var categoryIcons = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+    {
+        { "Cars", "bi-car-front-fill" },
+        { "Mobiles", "bi-phone-fill" },
+        { "Jobs", "bi-briefcase-fill" },
+        { "Electronics", "bi-laptop-fill" },
+        { "Furniture", "bi-lamp-fill" },
+        { "Pets", "bi-heart-pulse-fill" },
+        { "Books", "bi-book-fill" },
+        { "Fashion", "bi-person-fill" },
+        { "Sports", "bi-bicycle" },
+        { "Real Estate", "bi-house-fill" }
+    };
+}
+
+<ul class="category-list">
+    @foreach (var category in Model)
+    {
+        var iconClass = !string.IsNullOrEmpty(category.IconUrl) && category.IconUrl.StartsWith("bi-") 
+            ? category.IconUrl 
+            : (categoryIcons.TryGetValue(category.Name, out var mappedIcon) ? mappedIcon : "bi-grid-fill");
+        
+        <li class="category-item">
+            <a asp-controller="Ads" asp-action="Index" asp-route-categoryId="@category.Id" 
+               class="category-link" title="@category.Name">
+                <i class="bi @iconClass category-icon"></i>
+                <span class="category-label">@category.Name</span>
+            </a>
+        </li>
+    }
+</ul>

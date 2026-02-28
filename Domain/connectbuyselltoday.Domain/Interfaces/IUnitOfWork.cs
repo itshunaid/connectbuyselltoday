@@ -10,6 +10,7 @@ public interface IUnitOfWork : IDisposable
     IMessageRepository Messages { get; }
     IUserRepository Users { get; }
     IFavoriteRepository Favorites { get; }
+    IReportRepository Reports { get; }
 
     Task<int> CompleteAsync();
 }

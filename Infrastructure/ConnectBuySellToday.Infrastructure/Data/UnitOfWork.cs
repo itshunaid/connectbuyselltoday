@@ -21,6 +21,7 @@ public class UnitOfWork : IUnitOfWork
         Messages = new MessageRepository(_context);
         Users = new UserRepository(_userManager);
         Favorites = new FavoriteRepository(_context);
+        Reports = new ReportRepository(_context);
     }
 
     public IAdRepository Ads { get; private set; } = null!;
@@ -29,6 +30,7 @@ public class UnitOfWork : IUnitOfWork
     public IMessageRepository Messages { get; private set; } = null!;
     public IUserRepository Users { get; private set; } = null!;
     public IFavoriteRepository Favorites { get; private set; } = null!;
+    public IReportRepository Reports { get; private set; } = null!;
 
     public async Task<int> CompleteAsync()
     {

@@ -1,0 +1,167 @@
+@model ConnectBuySellToday.Application.DTOs.ReportAdDto
+
+@using ConnectBuySellToday.Domain.Enums
+
+@{
+    ViewData["Title"] = "Report Details";
+    Layout = "_Layout";
+}
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Report Details</h1>
+        <div>
+            <a asp-action="Reports" class="btn btn-outline-secondary">Back to Reports</a>
+            <a asp-action="PendingReports" class="btn btn-warning">Pending Reports</a>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Report Information</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-3">Report ID</dt>
+                        <dd class="col-sm-9">@Model.Id</dd>
+
+                        <dt class="col-sm-3">Status</dt>
+                        <dd class="col-sm-9">
+                            <span class="badge bg-@GetStatusBadgeColor(Model.Status)">
+                                @Model.Status
+                            </span>
+                        </dd>
+
+                        <dt class="col-sm-3">Reason</dt>
+                        <dd class="col-sm-9">
+                            <span class="badge bg-@GetReasonBadgeColor(Model.Reason)">
+                                @Model.Reason
+                            </span>
+                        </dd>
+
+                        <dt class="col-sm-3">Reporter</dt>
+                        <dd class="col-sm-9">@Model.ReporterName</dd>
+
+                        <dt class="col-sm-3">Reported On</dt>
+                        <dd class="col-sm-9">@Model.CreatedAt.ToString("MMMM dd, yyyy HH:mm")</dd>
+
+                        @if (Model.ResolvedAt.HasValue)
+                        {
+                            <dt class="col-sm-3">Resolved On</dt>
+                            <dd class="col-sm-9">@Model.ResolvedAt.Value.ToString("MMMM dd, yyyy HH:mm")</dd>
+                        }
+                    </dl>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Description</h5>
+                </div>
+                <div class="card-body">
+                    <p>@Model.Description</p>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.AdminNotes))
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Admin Notes</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>@Model.AdminNotes</p>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Reported Ad</h5>
+                </div>
+                <div class="card-body">
+                    <h6>@Model.AdTitle</h6>
+                    <a asp-controller="Ads" asp-action="Details" asp-route-id="@Model.AdId" class="btn btn-sm btn-primary" target="_blank">
+                        View Ad
+                    </a>
+                </div>
+            </div>
+
+            @if (Model.Status == ReportStatus.Pending)
+            {
+                <div class="card border-warning">
+                    <div class="card-header bg-warning">
+                        <h5>Resolve Report</h5>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="ResolveReport" method="post">
+                            <input type="hidden" name="id" value="@Model.Id" />
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Resolution Status</label>
+                                <select name="status" class="form-select" required>
+                                    <option value="">Select status...</option>
+                                    <option value="@ReportStatus.Resolved">Resolved - Action Taken</option>
+                                    <option value="@ReportStatus.Reviewed">Reviewed - No Action Needed</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Admin Notes</label>
+                                <textarea name="adminNotes" class="form-control" rows="3" placeholder="Add notes about this resolution..."></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-success w-100">Resolve Report</button>
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@{
+    string GetReasonBadgeColor(ReportReason reason)
+    {
+        return reason switch
+        {
+            ReportReason.Spam => "secondary",
+            ReportReason.Inappropriate => "danger",
+            ReportReason.Fraud => "warning",
+            ReportReason.Misleading => "info",
+            ReportReason.Other => "light",
+            _ => "secondary"
+        };
+    }
+
+    string GetStatusBadgeColor(ReportStatus status)
+    {
+        return status switch
+        {
+            ReportStatus.Pending => "warning",
+            ReportStatus.Reviewed => "info",
+            ReportStatus.Resolved => "success",
+            _ => "secondary"
+        };
+    }
+}

@@ -49,6 +49,12 @@
                             <p>No messages yet. Start the conversation!</p>
                         </div>
                     }
+                    <!-- Typing Indicator -->
+                    <div id="typingIndicator" class="chat-message receiver mb-3" style="display: none;">
+                        <div class="message-bubble bg-light">
+                            <p class="mb-0"><em><span id="typingUserName">Someone</span> is typing...</em></p>
+                        </div>
+                    </div>
                 </div>
                 
                 <!-- Chat Input -->
@@ -180,6 +186,53 @@
 
         connection.on("ReceiveMessage", function (data) {
             addMessageToChat(data.senderId, data.senderName, data.message, data.timestamp);
+            // Hide typing indicator when a message is received
+            hideTypingIndicator();
+        });
+
+        // Typing indicator functionality
+        let typingTimeout;
+        
+        function showTypingIndicator(userName) {
+            const typingIndicator = document.getElementById("typingIndicator");
+            const typingUserName = document.getElementById("typingUserName");
+            typingUserName.textContent = userName;
+            typingIndicator.style.display = "flex";
+            scrollToBottom();
+            
+            // Auto-hide after 3 seconds
+            clearTimeout(typingTimeout);
+            typingTimeout = setTimeout(hideTypingIndicator, 3000);
+        }
+
+        function hideTypingIndicator() {
+            const typingIndicator = document.getElementById("typingIndicator");
+            typingIndicator.style.display = "none";
+            clearTimeout(typingTimeout);
+        }
+
+        // Listen for typing events from other users
+        connection.on("Typing", function (data) {
+            if (data.userId !== currentUserId) {
+                showTypingIndicator(data.userName);
+            }
+        });
+
+        // Send typing status when user types
+        const messageInput = document.getElementById("messageInput");
+        let isTyping = false;
+
+        messageInput.addEventListener("input", async function () {
+            if (!isTyping && connection.state === signalR.HubConnectionState.Connected) {
+                isTyping = true;
+                try {
+                    await connection.invoke("SendTyping", conversationId, otherUserId);
+                } catch (err) {
+                    console.error(err);
+                }
+                // Reset typing status after 2 seconds
+                setTimeout(() => { isTyping = false; }, 2000);
+            }
         });
 
         document.getElementById("sendButton").addEventListener("click", async function () {

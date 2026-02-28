@@ -3,6 +3,7 @@ using ConnectBuySellToday.Application.Services;
 using ConnectBuySellToday.Domain.Entities;
 using ConnectBuySellToday.Domain.Interfaces;
 using ConnectBuySellToday.Infrastructure.Data;
+using ConnectBuySellToday.Infrastructure.Repositories;
 using ConnectBuySellToday.Infrastructure.Services;
 using ConnectBuySellToday.Web.Hubs;
 using Microsoft.AspNetCore.Identity;
@@ -47,6 +48,11 @@ builder.Services.AddScoped<IAdService, AdService>();
 builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+
+// In your Dependency Injection setup section
+builder.Services.AddScoped<IReportRepository, ReportRepository>();
+builder.Services.AddScoped<IAdRepository, AdRepository>(); // The missing piece!
+builder.Services.AddScoped<IReportService, ReportService>();
 
 // Add SignalR
 builder.Services.AddSignalR();

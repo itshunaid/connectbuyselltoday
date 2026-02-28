@@ -14,6 +14,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<AdImage> AdImages => Set<AdImage>();
     public DbSet<Message> Messages => Set<Message>();
     public DbSet<Favorite> Favorites => Set<Favorite>();
+    public DbSet<ReportAd> ReportAds => Set<ReportAd>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -50,6 +51,22 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         modelBuilder.Entity<Favorite>()
             .HasIndex(f => new { f.UserId, f.ProductAdId })
             .IsUnique();
+
+        // ReportAd entity configuration
+        modelBuilder.Entity<ReportAd>()
+            .HasOne(r => r.Ad)
+            .WithMany()
+            .HasForeignKey(r => r.AdId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<ReportAd>()
+            .HasOne(r => r.Reporter)
+            .WithMany()
+            .HasForeignKey(r => r.ReporterId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<ReportAd>()
+            .HasIndex(r => r.Status);
 
         // Seed categories with predefined Guids to match the dropdown values
         modelBuilder.Entity<Category>().HasData(

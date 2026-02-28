@@ -1,5 +1,6 @@
 using ConnectBuySellToday.Application.DTOs;
 using ConnectBuySellToday.Application.Interfaces;
+using ConnectBuySellToday.Domain.Enums;
 using ConnectBuySellToday.Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -142,6 +143,38 @@ return View();
         {
             _logger.LogError(ex, "Error checking favorite status for ad {AdId}", adId);
             return Json(new { isFavorite = false });
+        }
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [Authorize]
+    public async Task<IActionResult> ReportAd([FromBody] CreateReportDto createReportDto)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Json(new { success = false, message = "Please login to report an ad" });
+        }
+
+        try
+        {
+            var reportService = HttpContext.RequestServices.GetRequiredService<IReportService>();
+            var result = await reportService.ReportAdAsync(userId, createReportDto);
+            
+            if (result)
+            {
+                return Json(new { success = true, message = "Report submitted successfully. Thank you for your feedback." });
+            }
+            else
+            {
+                return Json(new { success = false, message = "You have already reported this ad or cannot report your own ad." });
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error reporting ad {AdId}", createReportDto.AdId);
+            return Json(new { success = false, message = "An error occurred while submitting your report." });
         }
     }
 }

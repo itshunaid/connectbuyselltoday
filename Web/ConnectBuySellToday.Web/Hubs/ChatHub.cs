@@ -28,6 +28,25 @@ public class ChatHub : Hub
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, conversationId);
     }
 
+    public async Task SendTyping(string conversationId, string receiverId)
+    {
+        var userId = Context.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return;
+        }
+
+        var userName = Context.User?.Identity?.Name ?? "User";
+        
+        // Broadcast typing status to the conversation group (excluding sender)
+        await Clients.OthersInGroup(conversationId).SendAsync("Typing", new
+        {
+            UserId = userId,
+            UserName = userName,
+            IsTyping = true
+        });
+    }
+
     public async Task SendMessage(string conversationId, string receiverId, string message, string senderId)
     {
         // Get the sender's user ID from claims
