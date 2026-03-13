@@ -11,6 +11,7 @@ public interface IUnitOfWork : IDisposable
     IUserRepository Users { get; }
     IFavoriteRepository Favorites { get; }
     IReportRepository Reports { get; }
+    IReviewRepository Reviews { get; }
 
     Task<int> CompleteAsync();
 }

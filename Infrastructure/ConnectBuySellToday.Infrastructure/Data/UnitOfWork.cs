@@ -1,5 +1,4 @@
-﻿
-using ConnectBuySellToday.Domain.Entities;
+﻿using ConnectBuySellToday.Domain.Entities;
 using ConnectBuySellToday.Domain.Interfaces;
 using ConnectBuySellToday.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Identity;
@@ -22,6 +21,7 @@ public class UnitOfWork : IUnitOfWork
         Users = new UserRepository(_userManager);
         Favorites = new FavoriteRepository(_context);
         Reports = new ReportRepository(_context);
+        Reviews = new ReviewRepository(_context);
     }
 
     public IAdRepository Ads { get; private set; } = null!;
@@ -31,6 +31,7 @@ public class UnitOfWork : IUnitOfWork
     public IUserRepository Users { get; private set; } = null!;
     public IFavoriteRepository Favorites { get; private set; } = null!;
     public IReportRepository Reports { get; private set; } = null!;
+    public IReviewRepository Reviews { get; private set; } = null!;
 
     public async Task<int> CompleteAsync()
     {

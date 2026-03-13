@@ -6,6 +6,7 @@ using ConnectBuySellToday.Infrastructure.Data;
 using ConnectBuySellToday.Infrastructure.Repositories;
 using ConnectBuySellToday.Infrastructure.Services;
 using ConnectBuySellToday.Web.Hubs;
+using ConnectBuySellToday.Application.DTOs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,7 +17,9 @@ builder.Services.AddControllersWithViews();
 
 // Register DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        sqlServerOptions => sqlServerOptions.EnableRetryOnFailure()));
 
 // Add Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => {
@@ -48,10 +51,12 @@ builder.Services.AddScoped<IAdService, AdService>();
 builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
 
-// In your Dependency Injection setup section
+// Register Repositories
 builder.Services.AddScoped<IReportRepository, ReportRepository>();
-builder.Services.AddScoped<IAdRepository, AdRepository>(); // The missing piece!
+builder.Services.AddScoped<IAdRepository, AdRepository>();
+builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 builder.Services.AddScoped<IReportService, ReportService>();
 
 // Add SignalR

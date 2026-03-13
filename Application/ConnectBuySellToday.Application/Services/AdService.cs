@@ -11,11 +11,13 @@ public class AdService : IAdService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IImageService _imageService;
+    private readonly IReviewService _reviewService;
 
-    public AdService(IUnitOfWork unitOfWork, IImageService imageService)
+    public AdService(IUnitOfWork unitOfWork, IImageService imageService, IReviewService reviewService)
     {
         _unitOfWork = unitOfWork;
         _imageService = imageService;
+        _reviewService = reviewService;
     }
 
     public async Task<IEnumerable<AdDto>> GetLatestAdsAsync(string? searchQuery = null)
@@ -101,6 +103,9 @@ public class AdService : IAdService
         if (ad == null)
             return null;
 
+        // Get seller average rating
+        var sellerAverageRating = await _reviewService.GetAverageRatingForSellerAsync(ad.SellerId);
+
         return new AdDto
         {
             Id = ad.Id,
@@ -111,6 +116,7 @@ public class AdService : IAdService
             CategoryId = ad.CategoryId,
             CategoryName = ad.Category?.Name ?? "General",
             SellerId = ad.SellerId,
+            SellerAverageRating = sellerAverageRating,
             MainImageUrl = ad.Images.FirstOrDefault(i => i.IsMain)?.Url ?? ad.Images.FirstOrDefault()?.Url,
             ImageUrls = ad.Images.Select(i => i.Url).ToList(),
             CreatedAt = ad.CreatedAt,

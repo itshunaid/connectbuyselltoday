@@ -15,6 +15,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Message> Messages => Set<Message>();
     public DbSet<Favorite> Favorites => Set<Favorite>();
     public DbSet<ReportAd> ReportAds => Set<ReportAd>();
+    public DbSet<Review> Reviews => Set<Review>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -67,6 +68,24 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
         modelBuilder.Entity<ReportAd>()
             .HasIndex(r => r.Status);
+
+        // Review entity configuration
+        modelBuilder.Entity<Review>()
+            .HasOne(r => r.Buyer)
+            .WithMany()
+            .HasForeignKey(r => r.BuyerId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Review>()
+            .HasOne(r => r.Seller)
+            .WithMany()
+            .HasForeignKey(r => r.SellerId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        // Ensure a buyer can only review a seller once
+        modelBuilder.Entity<Review>()
+            .HasIndex(r => new { r.BuyerId, r.SellerId })
+            .IsUnique();
 
         // Seed categories with predefined Guids to match the dropdown values
         modelBuilder.Entity<Category>().HasData(

@@ -177,4 +177,72 @@ return View();
             return Json(new { success = false, message = "An error occurred while submitting your report." });
         }
     }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [Authorize]
+    public async Task<IActionResult> SubmitReview([FromBody] CreateReviewDto createReviewDto)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Json(new { success = false, message = "Please login to submit a review" });
+        }
+
+        try
+        {
+            var reviewService = HttpContext.RequestServices.GetRequiredService<IReviewService>();
+            
+            // Check if user can review this seller
+            var canReview = await reviewService.CanUserReviewSellerAsync(userId, createReviewDto.SellerId);
+            if (!canReview)
+            {
+                return Json(new { success = false, message = "You must message the seller before leaving a review" });
+            }
+
+            var result = await reviewService.SubmitReviewAsync(userId, createReviewDto);
+            
+            if (result)
+            {
+                return Json(new { success = true, message = "Review submitted successfully!" });
+            }
+            else
+            {
+                return Json(new { success = false, message = "Failed to submit review. Please try again." });
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            _logger.LogWarning(ex, "User {UserId} attempted to review without messaging seller", userId);
+            return Json(new { success = false, message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error submitting review for seller {SellerId}", createReviewDto.SellerId);
+            return Json(new { success = false, message = "An error occurred while submitting your review." });
+        }
+    }
+
+    [HttpGet]
+    [AllowAnonymous]
+    public async Task<IActionResult> CanReviewSeller(string sellerId)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Json(new { canReview = false, message = "Please login to review" });
+        }
+
+        try
+        {
+            var reviewService = HttpContext.RequestServices.GetRequiredService<IReviewService>();
+            var canReview = await reviewService.CanUserReviewSellerAsync(userId, sellerId);
+            return Json(new { canReview = canReview });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error checking review permission for seller {SellerId}", sellerId);
+            return Json(new { canReview = false });
+        }
+    }
 }

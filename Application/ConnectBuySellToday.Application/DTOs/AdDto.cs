@@ -16,6 +16,7 @@ public class AdDto
     public string CategoryName { get; set; } = string.Empty;
     public string SellerId { get; set; } = string.Empty;
     public string SellerName { get; set; } = string.Empty;
+    public double? SellerAverageRating { get; set; }
     public string? MainImageUrl { get; set; }
     public List<string> ImageUrls { get; set; } = new();
     public DateTime CreatedAt { get; set; }
